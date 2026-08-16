@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #f6faf8;
+  --color-surface: #ffffff;
+  --color-surface-2: #eaf2ef;
+  --color-espresso: #14201c;
+  --color-taupe: #4d5f58;
+  --color-taupe-faint: #8ba097;
+  --color-line: #dce8e3;
+  --color-accent: #0e7a6b;
+  --color-accent-soft: #d9ede8;
+  --color-accent-ink: #ffffff;
+  --color-ok: #3f6b58;
+  --color-ok-bg: #e2ece5;
+  --color-warn: #8a5f24;
+  --color-warn-bg: #f4e9d4;
+  --color-bad: #97493a;
+  --color-bad-bg: #f4e2dc;
+
+  --radius-panel: 16px;
+  --radius-ctrl: 10px;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --shadow-soft: 0 12px 32px rgba(20, 45, 40, 0.08);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Shared ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-ctrl);
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 16px;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+  cursor: pointer;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+.btn-primary:hover {
+  opacity: 0.92;
+}
+.btn-ghost {
+  background: transparent;
+  border-color: var(--color-line);
+  color: var(--color-espresso);
+}
+.btn-ghost:hover {
+  background: var(--color-surface-2);
+}
+.btn-soft {
+  background: var(--color-surface-2);
+  color: var(--color-espresso);
+}
+.btn-soft:hover {
+  background: #ddeae4;
+}
+.btn-sm {
+  padding: 7px 12px;
+  font-size: 13px;
+}
+.btn-block {
+  width: 100%;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 4px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.badge-baru {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.badge-konfirmasi {
+  background: var(--color-ok-bg);
+  color: var(--color-ok);
+}
+.badge-selesai {
+  background: var(--color-ok-bg);
+  color: var(--color-ok);
+}
+.badge-batal {
+  background: var(--color-bad-bg);
+  color: var(--color-bad);
+}
+
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--color-taupe-faint);
+  text-transform: uppercase;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label {
+  font-size: 13px;
+  font-weight: 700;
+}
+.field input,
+.field select {
+  padding: 11px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-ctrl);
+  background: var(--color-surface);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--color-espresso);
+  width: 100%;
+}
+.field input:focus,
+.field select:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+/* ---------- Table ---------- */
+
+.table-wrap {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.table-wrap th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-taupe-faint);
+  text-align: left;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--color-line);
+}
+.table-wrap td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: middle;
+}
+.table-wrap tbody tr:last-child td {
+  border-bottom: none;
+}
+.table-wrap tbody tr:hover {
+  background: var(--color-surface-2);
+}
