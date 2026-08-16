@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KLINIK CITRA - Mockup (Landing + Booking + Admin)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+<style>
+:root {
+  --bg: #f6faf8;
+  --surface: #ffffff;
+  --surface-2: #eaf2ef;
+  --text: #14201c;
+  --text-soft: #4d5f58;
+  --text-faint: #8ba097;
+  --line: #dce8e3;
+  --accent: #0e7a6b;
+  --accent-soft: #d9ede8;
+  --accent-ink: #ffffff;
+  --ok: #3f6b58;
+  --ok-bg: #e2ece5;
+  --warn: #8a5f24;
+  --warn-bg: #f4e9d4;
+  --bad: #97493a;
+  --bad-bg: #f4e2dc;
+  --r-panel: 16px;
+  --r-ctrl: 10px;
+  --shadow-soft: 0 12px 32px rgba(20, 45, 40, 0.08);
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-sans); background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+button { font-family: inherit; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* ---------- Shared ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border-radius: var(--r-ctrl); border: 1px solid transparent;
+  font-size: 14px; font-weight: 700; padding: 11px 18px;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { opacity: 0.92; }
+.btn-ghost { background: transparent; border-color: var(--line); color: var(--text); }
+.btn-ghost:hover { background: var(--surface-2); }
+.btn-soft { background: var(--surface-2); color: var(--text); }
+.btn-soft:hover { background: #ddeae4; }
+.btn-sm { padding: 7px 12px; font-size: 13px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  padding: 4px 9px; border-radius: 999px; text-transform: uppercase;
+}
+.badge-baru { background: var(--accent-soft); color: var(--accent); }
+.badge-konfirmasi { background: var(--ok-bg); color: var(--ok); }
+.badge-selesai { background: var(--ok-bg); color: var(--ok); }
+.badge-batal { background: var(--bad-bg); color: var(--bad); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 13px; font-weight: 700; }
+.field input, .field select {
+  padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--r-ctrl);
+  background: var(--surface); font-family: inherit; font-size: 14px; color: var(--text); width: 100%;
+}
+.field input:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.field-err { display: none; font-size: 12.5px; color: var(--bad); }
+.field-err.show { display: block; }
+.kpi-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--text-faint); text-transform: uppercase; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-panel); box-shadow: var(--shadow-soft); }
+
+/* ---------- Top demo switcher ---------- */
+.demo-bar {
+  position: sticky; top: 0; z-index: 60;
+  background: #14201c; color: #dff3ec;
+  display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 12px;
+}
+.demo-bar b { font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.08em; }
+.demo-bar .spacer { flex: 1; }
+.demo-tab {
+  border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #dff3ec;
+  border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 600;
+}
+.demo-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.screen { display: none; }
+.screen.show { display: block; }
+
+/* ---------- Landing ---------- */
+.nav {
+  display: flex; align-items: center; gap: 28px; padding: 18px 0;
+  max-width: 1120px; margin: 0 auto; padding-left: 20px; padding-right: 20px;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark {
+  width: 38px; height: 38px; border-radius: 12px; background: var(--accent); color: #fff;
+  display: grid; place-items: center; font-size: 20px;
+}
+.brand-name { font-weight: 800; letter-spacing: 0.01em; }
+.brand-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; color: var(--text-faint); text-transform: uppercase; }
+.nav-links { display: flex; gap: 22px; font-size: 14px; font-weight: 600; color: var(--text-soft); }
+.nav-links a:hover { color: var(--text); }
+.nav-cta { margin-left: auto; }
+
+.hero { max-width: 1120px; margin: 0 auto; padding: 48px 20px 40px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
+.hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--accent); text-transform: uppercase; background: var(--accent-soft); padding: 5px 12px; border-radius: 999px; margin-bottom: 18px; }
+.hero h1 { font-size: 44px; line-height: 1.12; letter-spacing: -0.02em; font-weight: 800; margin-bottom: 16px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero p { color: var(--text-soft); font-size: 16px; line-height: 1.65; max-width: 46ch; margin-bottom: 26px; }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero-note { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 14px; }
+.hero-visual {
+  background: linear-gradient(145deg, #e7f3ef, #d5eae3);
+  border-radius: 24px; min-height: 360px;
+  display: grid; place-items: center; border: 1px solid var(--line);
+}
+.hero-visual .ph { font-size: 88px; color: var(--accent); opacity: 0.5; }
+
+.section { max-width: 1120px; margin: 0 auto; padding: 48px 20px; }
+.section-head { margin-bottom: 28px; }
+.section-head .kpi-label { margin-bottom: 8px; }
+.section-head h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; }
+
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.service-card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-panel);
+  padding: 22px; box-shadow: var(--shadow-soft);
+}
+.service-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 22px; margin-bottom: 14px; }
+.service-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.service-card p { font-size: 13.5px; color: var(--text-soft); line-height: 1.55; }
+.service-card .price { font-family: var(--font-mono); font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 12px; display: block; }
+
+.why-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.why-item { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-panel); padding: 20px; }
+.why-item .ph { font-size: 24px; color: var(--accent); flex-shrink: 0; }
+.why-item h3 { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+.why-item p { font-size: 13.5px; color: var(--text-soft); line-height: 1.55; }
+
+.testi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+.testi-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-panel); padding: 20px; }
+.testi-card p { font-size: 14px; line-height: 1.6; color: var(--text); }
+.testi-card .who { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+.testi-card .who .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-weight: 700; font-size: 13px; color: var(--text-soft); }
+.testi-card .who b { font-size: 13px; display: block; }
+.testi-card .who span { font-size: 12px; color: var(--text-faint); }
+
+.loc-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; }
+.map-ph {
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-panel);
+  min-height: 280px; display: grid; place-items: center; color: var(--text-faint);
+}
+.map-ph .ph { font-size: 48px; }
+.loc-info { display: flex; flex-direction: column; gap: 14px; }
+.loc-info .panel { padding: 18px; }
+.loc-info .row { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.loc-info .row .ph { font-size: 20px; color: var(--accent); }
+.loc-info .row b { display: block; font-size: 12.5px; color: var(--text-soft); font-weight: 600; }
+
+.footer { background: #14201c; color: #b8cec5; padding: 32px 20px; margin-top: 40px; }
+.footer-inner { max-width: 1120px; margin: 0 auto; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; font-size: 13px; }
+.footer b { color: #fff; }
+
+/* ---------- Booking ---------- */
+.booking-wrap { max-width: 640px; margin: 0 auto; padding: 40px 20px 60px; }
+.booking-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-soft); padding: 32px; }
+.booking-card h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+.booking-card .sub { color: var(--text-soft); font-size: 14px; margin-bottom: 24px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid .full { grid-column: 1 / -1; }
+.slot-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.slot {
+  padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+  font-size: 13px; font-weight: 600; color: var(--text-soft);
+}
+.slot.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.slot:disabled { opacity: 0.4; cursor: not-allowed; }
+.success-state { display: none; text-align: center; padding: 40px 10px; }
+.success-state.show { display: block; }
+.success-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--ok-bg); color: var(--ok); display: grid; place-items: center; font-size: 32px; margin: 0 auto 18px; }
+.success-state h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.success-state p { color: var(--text-soft); font-size: 14px; line-height: 1.6; max-width: 40ch; margin: 0 auto 20px; }
+
+/* ---------- Admin ---------- */
+.admin-bar { display: flex; align-items: center; gap: 12px; max-width: 1080px; margin: 0 auto; padding: 20px 20px 0; }
+.admin-bar .brand-name { font-size: 15px; }
+.admin-login { max-width: 400px; margin: 80px auto; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow-soft); padding: 32px; }
+.admin-login h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.admin-login .sub { color: var(--text-soft); font-size: 13.5px; margin-bottom: 22px; }
+.admin-main { max-width: 1080px; margin: 0 auto; padding: 24px 20px 60px; }
+.admin-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+.admin-head h2 { font-size: 20px; font-weight: 800; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+.toolbar input[type="search"] { padding: 9px 12px; border: 1px solid var(--line); border-radius: var(--r-ctrl); font-family: inherit; font-size: 13.5px; background: var(--surface); width: 240px; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.tab { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; font-weight: 600; color: var(--text-soft); }
+.tab.active { background: var(--text); color: #fff; border-color: var(--text); }
+.tab .count { font-family: var(--font-mono); font-size: 10px; opacity: 0.7; margin-left: 3px; }
+.table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-panel); box-shadow: var(--shadow-soft); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); text-align: left; padding: 13px 16px; border-bottom: 1px solid var(--line); }
+td { padding: 13px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--surface-2); }
+.status-actions { display: flex; gap: 6px; }
+.icon-action { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--text-soft); display: grid; place-items: center; font-size: 14px; }
+.icon-action:hover { background: var(--surface-2); color: var(--text); }
+.empty { padding: 30px; text-align: center; color: var(--text-soft); font-size: 14px; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: #14201c; color: #fff; padding: 12px 18px; border-radius: 12px;
+  font-size: 13.5px; font-weight: 600; box-shadow: var(--shadow-soft); opacity: 0;
+  transition: all 0.25s ease; z-index: 80; display: flex; align-items: center; gap: 9px; max-width: 90vw;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; padding-top: 32px; }
+  .hero h1 { font-size: 34px; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .why-grid, .testi { grid-template-columns: 1fr; }
+  .loc-row { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid .full { grid-column: auto; }
+  .nav-links { display: none; }
+  .nav-cta { margin-left: auto; }
+}
+@media (max-width: 560px) {
+  .services-grid { grid-template-columns: 1fr; }
+  .demo-tab span.long { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Demo switcher -->
+<div class="demo-bar">
+  <b>KLINIK CITRA · MOCKUP</b>
+  <div class="spacer"></div>
+  <button class="demo-tab active" data-tab="landing" onclick="showTab('landing')">Landing</button>
+  <button class="demo-tab" data-tab="booking" onclick="showTab('booking')">Booking</button>
+  <button class="demo-tab" data-tab="admin" onclick="showTab('admin')">Admin</button>
+</div>
+
+<!-- ============ LANDING ============ -->
+<section class="screen show" id="screen-landing">
+  <nav class="nav">
+    <div class="brand">
+      <div class="brand-mark"><i class="ph-fill ph-tooth"></i></div>
+      <div>
+        <div class="brand-name">KLINIK CITRA</div>
+        <div class="brand-sub">Pergigian Keluarga</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#rawatan">Rawatan</a>
+      <a href="#kenapa">Kenapa Kami</a>
+      <a href="#lokasi">Lokasi</a>
+    </div>
+    <button class="btn btn-primary nav-cta" onclick="goBooking()">Buat Temujanji <i class="ph ph-calendar-plus"></i></button>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="hero-eyebrow"><i class="ph-fill ph-shield-check"></i> Klinik keluarga di Ipoh, Perak</span>
+      <h1>Senyuman sihat bermula <em>di sini.</em></h1>
+      <p>Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati. Tiada menunggu berjam-jam.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="goBooking()">Buat Temujanji Sekarang</button>
+        <button class="btn btn-ghost" onclick="toast('WhatsApp: 05-255 8899')"><i class="ph ph-whatsapp-logo"></i> WhatsApp Kami</button>
+      </div>
+      <p class="hero-note">Buka Isnin - Sabtu · 9:00 pagi - 5:00 petang</p>
+    </div>
+    <div class="hero-visual"><i class="ph-fill ph-tooth"></i></div>
+  </header>
+
+  <section class="section" id="rawatan">
+    <div class="section-head">
+      <p class="kpi-label">Rawatan</p>
+      <h2>Perkhidmatan pergigian lengkap</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon"><i class="ph ph-sparkle"></i></div>
+        <h3>Pembersihan Gigi</h3>
+        <p>Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih.</p>
+        <span class="price">Dari RM 80</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="ph ph-minus-circle"></i></div>
+        <h3>Cabutan Gigi</h3>
+        <p>Cabutan selamat dan selesa, termasuk gigi bungsu bermasalah.</p>
+        <span class="price">Dari RM 60</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="ph ph-fill ph-tooth"></i></div>
+        <h3>Tampalan</h3>
+        <p>Tampalan estetik warna gigi untuk gigi berlubang dan rosak.</p>
+        <span class="price">Dari RM 90</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="ph ph-crown"></i></div>
+        <h3>Crown & Veneer</h3>
+        <p>Pulihkan dan perbaiki bentuk gigi dengan crown dan veneer.</p>
+        <span class="price">Dari RM 350</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="ph ph-sun"></i></div>
+        <h3>Whitening</h3>
+        <p>Pemutihan gigi profesional untuk senyuman lebih cerah.</p>
+        <span class="price">Dari RM 250</span>
+      </div>
+      <div class="service-card">
+        <div class="service-icon"><i class="ph ph-smiley"></i></div>
+        <h3>Braces</h3>
+        <p>Rawatan ortodontik untuk susunan gigi yang lebih kemas.</p>
+        <span class="price">Dari RM 2,500</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="kenapa">
+    <div class="section-head">
+      <p class="kpi-label">Kenapa Kami</p>
+      <h2>Kepercayaan keluarga, teknologi moden</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item"><i class="ph ph-user-check"></i><div><h3>Doktor berpengalaman</h3><p>Lebih 10 tahun pengalaman merawat keluarga di Perak.</p></div></div>
+      <div class="why-item"><i class="ph ph-wrench"></i><div><h3>Peralatan moden</h3><p>Radiografi digital dan rawatan minimally invasive.</p></div></div>
+      <div class="why-item"><i class="ph ph-currency-circle-dollar"></i><div><h3>Harga telus</h3><p>Anggaran kos diberi sebelum rawatan bermula.</p></div></div>
+      <div class="why-item"><i class="ph ph-clock"></i><div><h3>Temujanji dihormati</h3><p>Masa anda dihormati, kurang menunggu.</p></div></div>
+    </div>
+    <div class="testi">
+      <div class="testi-card">
+        <p>"Anak saya tak takut lagi ke klinik gigi. Doktor sangat sabar dan terangkan setiap langkah."</p>
+        <div class="who"><div class="avatar">NI</div><div><b>Nurul Izzah</b><span>Ibu kepada 2 anak, Ipoh</span></div></div>
+      </div>
+      <div class="testi-card">
+        <p>"Temujanji on time, harga pun sama macam yang diberitahu. Recommend untuk keluarga."</p>
+        <div class="who"><div class="avatar">AK</div><div><b>Azman Khalid</b><span>Pesakit tetap, Taiping</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="lokasi">
+    <div class="section-head">
+      <p class="kpi-label">Lokasi & Waktu</p>
+      <h2>Senang ditemui, dekat dengan anda</h2>
+    </div>
+    <div class="loc-row">
+      <div class="map-ph"><i class="ph-fill ph-map-pin"></i><span style="font-family:var(--font-mono);font-size:12px;margin-top:8px">Google Maps embed</span></div>
+      <div class="loc-info">
+        <div class="panel">
+          <div class="row"><i class="ph ph-map-pin"></i><div><b>Alamat</b>No. 12, Jalan Dato Ahmad, 30000 Ipoh, Perak</div></div>
+          <div class="row" style="margin-top:12px"><i class="ph ph-phone"></i><div><b>Telefon</b>05-255 8899 · WhatsApp 012-345 6789</div></div>
+          <div class="row" style="margin-top:12px"><i class="ph ph-envelope"></i><div><b>Emel</b>hello@klinikcitra.my</div></div>
+        </div>
+        <div class="panel">
+          <div class="row"><i class="ph ph-clock"></i><div><b>Waktu Operasi</b>Isnin - Jumaat: 9:00 pagi - 5:00 petang · Sabtu: 9:00 pagi - 1:00 tengah hari · Ahad: Tutup</div></div>
+        </div>
+        <button class="btn btn-primary" onclick="goBooking()">Buat Temujanji</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><b>KLINIK CITRA</b><br />Pergigian keluarga di Ipoh, Perak</div>
+      <div><b>Hubungi</b><br />05-255 8899 · hello@klinikcitra.my</div>
+      <div><b>Waktu</b><br />Isnin - Sabtu · 9:00 pagi - 5:00 petang</div>
+    </div>
+  </footer>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<section class="screen" id="screen-booking">
+  <div class="booking-wrap">
+    <div class="booking-card">
+      <form id="booking-form" onsubmit="submitBooking(event)">
+        <h1>Buat Temujanji</h1>
+        <p class="sub">Isi maklumat di bawah. Kami akan hubungi anda untuk pengesahan.</p>
+        <div class="form-grid">
+          <div class="field full">
+            <label for="bk-name">Nama penuh</label>
+            <input id="bk-name" type="text" placeholder="cth: Nurul Izzah" />
+            <span class="field-err" id="err-name">Sila masukkan nama.</span>
+          </div>
+          <div class="field full">
+            <label for="bk-phone">No. telefon</label>
+            <input id="bk-phone" type="tel" placeholder="012-345 6789" />
+            <span class="field-err" id="err-phone">Sila masukkan nombor telefon sah (cth: 012-3456789).</span>
+          </div>
+          <div class="field full">
+            <label for="bk-service">Rawatan</label>
+            <select id="bk-service">
+              <option value="">Pilih rawatan...</option>
+              <option>Pembersihan Gigi</option>
+              <option>Cabutan Gigi</option>
+              <option>Tampalan</option>
+              <option>Crown & Veneer</option>
+              <option>Whitening</option>
+              <option>Braces</option>
+              <option>Konsultasi</option>
+            </select>
+            <span class="field-err" id="err-service">Sila pilih rawatan.</span>
+          </div>
+          <div class="field">
+            <label for="bk-date">Tarikh</label>
+            <input id="bk-date" type="date" />
+            <span class="field-err" id="err-date">Pilih tarikh yang sah.</span>
+          </div>
+          <div class="field">
+            <label>Masa</label>
+            <div class="slot-row" id="slot-row">
+              <button type="button" class="slot" data-slot="09:00">09:00</button>
+              <button type="button" class="slot" data-slot="10:00">10:00</button>
+              <button type="button" class="slot" data-slot="11:00">11:00</button>
+              <button type="button" class="slot" data-slot="14:00">14:00</button>
+              <button type="button" class="slot" data-slot="15:00">15:00</button>
+              <button type="button" class="slot" data-slot="16:00">16:00</button>
+              <button type="button" class="slot" data-slot="17:00">17:00</button>
+            </div>
+            <span class="field-err" id="err-slot">Sila pilih masa.</span>
+          </div>
+          <div class="full">
+            <button type="submit" class="btn btn-primary" style="width:100%">Hantar Temujanji <i class="ph ph-paper-plane-tilt"></i></button>
+          </div>
+        </div>
+      </form>
+      <div class="success-state" id="booking-success">
+        <div class="success-icon"><i class="ph-fill ph-check"></i></div>
+        <h2>Temujanji diterima!</h2>
+        <p>Terima kasih. Kami akan hubungi anda melalui WhatsApp atau telefon untuk pengesahan slot.</p>
+        <button class="btn btn-ghost" onclick="resetBooking()">Buat temujanji lain</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADMIN ============ -->
+<section class="screen" id="screen-admin">
+  <div class="admin-bar">
+    <div class="brand">
+      <div class="brand-mark" style="width:32px;height:32px;font-size:16px"><i class="ph-fill ph-tooth"></i></div>
+      <div><div class="brand-name">KLINIK CITRA</div></div>
+    </div>
+    <div class="spacer" style="flex:1"></div>
+    <span class="badge badge-baru">ADMIN</span>
+  </div>
+
+  <div class="admin-login" id="admin-login">
+    <h1>Log masuk admin</h1>
+    <p class="sub">Untuk demo: klik butang di bawah.</p>
+    <div class="field" style="margin-bottom:14px">
+      <label>Emel</label>
+      <input type="email" value="admin@klinikcitra.my" />
+    </div>
+    <div class="field" style="margin-bottom:18px">
+      <label>Kata laluan</label>
+      <input type="password" value="demo1234" />
+      <span class="field-err" id="admin-err">Kata laluan tidak tepat.</span>
+    </div>
+    <button class="btn btn-primary btn-block" style="width:100%" onclick="adminLogin()">Log Masuk</button>
+    <div style="margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;text-align:center">
+      <button class="btn btn-soft btn-sm" onclick="adminLogin()">Demo - masuk terus</button>
+    </div>
+  </div>
+
+  <div class="admin-main" id="admin-main" style="display:none">
+    <div class="admin-head">
+      <h2>Senarai Temujanji</h2>
+      <span class="kpi-label" id="admin-count">3 temujanji hari ini</span>
+    </div>
+    <div class="toolbar">
+      <div class="tabs">
+        <button class="tab active" data-tab="all" onclick="filterAdmin('all')">Semua <span class="count">6</span></button>
+        <button class="tab" data-tab="BARU" onclick="filterAdmin('BARU')">Baru <span class="count">3</span></button>
+        <button class="tab" data-tab="KONFIRMASI" onclick="filterAdmin('KONFIRMASI')">Konfirmasi <span class="count">2</span></button>
+        <button class="tab" data-tab="SELESAI" onclick="filterAdmin('SELESAI')">Selesai <span class="count">1</span></button>
+        <button class="tab" data-tab="BATAL" onclick="filterAdmin('BATAL')">Batal <span class="count">0</span></button>
+      </div>
+      <input type="search" placeholder="Cari nama atau telefon..." oninput="searchAdmin(this.value)" />
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Nama</th><th>Telefon</th><th>Rawatan</th><th>Tarikh</th><th>Masa</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="admin-body">
+          <tr data-status="BARU">
+            <td><b>Nurul Izzah</b></td><td>012-345 6789</td><td>Pembersihan Gigi</td><td>17 Ogos</td><td>10:00</td>
+            <td><span class="badge badge-baru">BARU</span></td>
+            <td><div class="status-actions"><button class="icon-action" onclick="toast('Konfirmasi temujanji')" title="Konfirmasi"><i class="ph ph-check"></i></button><button class="icon-action" onclick="toast('Tandakan batal')" title="Batal"><i class="ph ph-x"></i></button></div></td>
+          </tr>
+          <tr data-status="BARU">
+            <td><b>Azman Khalid</b></td><td>019-876 5432</td><td>Cabutan Gigi</td><td>17 Ogos</td><td>14:00</td>
+            <td><span class="badge badge-baru">BARU</span></td>
+            <td><div class="status-actions"><button class="icon-action" onclick="toast('Konfirmasi temujanji')" title="Konfirmasi"><i class="ph ph-check"></i></button><button class="icon-action" onclick="toast('Tandakan batal')" title="Batal"><i class="ph ph-x"></i></button></div></td>
+          </tr>
+          <tr data-status="BARU">
+            <td><b>Sarah Lim</b></td><td>011-2345 6789</td><td>Whitening</td><td>18 Ogos</td><td>09:00</td>
+            <td><span class="badge badge-baru">BARU</span></td>
+            <td><div class="status-actions"><button class="icon-action" onclick="toast('Konfirmasi temujanji')" title="Konfirmasi"><i class="ph ph-check"></i></button><button class="icon-action" onclick="toast('Tandakan batal')" title="Batal"><i class="ph ph-x"></i></button></div></td>
+          </tr>
+          <tr data-status="KONFIRMASI">
+            <td><b>Muhammad Faiz</b></td><td>017-555 1234</td><td>Tampalan</td><td>16 Ogos</td><td>15:00</td>
+            <td><span class="badge badge-konfirmasi">KONFIRMASI</span></td>
+            <td><div class="status-actions"><button class="icon-action" onclick="toast('Tandakan selesai')" title="Selesai"><i class="ph ph-check-square"></i></button><button class="icon-action" onclick="toast('Tandakan batal')" title="Batal"><i class="ph ph-x"></i></button></div></td>
+          </tr>
+          <tr data-status="KONFIRMASI">
+            <td><b>Aisyah Roslan</b></td><td>013-222 3344</td><td>Braces Konsultasi</td><td>16 Ogos</td><td>16:00</td>
+            <td><span class="badge badge-konfirmasi">KONFIRMASI</span></td>
+            <td><div class="status-actions"><button class="icon-action" onclick="toast('Tandakan selesai')" title="Selesai"><i class="ph ph-check-square"></i></button><button class="icon-action" onclick="toast('Tandakan batal')" title="Batal"><i class="ph ph-x"></i></button></div></td>
+          </tr>
+          <tr data-status="SELESAI">
+            <td><b>Hafiz Iskandar</b></td><td>016-888 9900</td><td>Pembersihan Gigi</td><td>15 Ogos</td><td>11:00</td>
+            <td><span class="badge badge-selesai">SELESAI</span></td>
+            <td><div class="status-actions"><button class="icon-action" onclick="toast('Buka rekod')" title="Buka"><i class="ph ph-eye"></i></button></div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="empty" id="admin-empty" style="display:none">Tiada temujanji untuk penapis ini.</div>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"><span id="toast-text">Mesej</span></div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.screen').forEach((s) => s.classList.remove('show'));
+  document.getElementById('screen-' + name).classList.add('show');
+  document.querySelectorAll('.demo-tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === name));
+}
+function goBooking() { showTab('booking'); }
+
+// Slot selection
+let selectedSlot = null;
+document.querySelectorAll('.slot').forEach((b) => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.slot').forEach((x) => x.classList.remove('active'));
+    b.classList.add('active');
+    selectedSlot = b.dataset.slot;
+    document.getElementById('err-slot').classList.remove('show');
+  });
+});
+
+// Booking submit
+function submitBooking(e) {
+  e.preventDefault();
+  let ok = true;
+  const name = document.getElementById('bk-name').value.trim();
+  const phone = document.getElementById('bk-phone').value.trim();
+  const service = document.getElementById('bk-service').value;
+  const date = document.getElementById('bk-date').value;
+
+  const show = (id, bad) => { document.getElementById(id).classList.toggle('show', bad); if (bad) ok = false; };
+  show('err-name', name.length < 2);
+  show('err-phone', !/^01[0-9]-?\d{7,8}$/.test(phone.replace(/\s/g, '')));
+  show('err-service', !service);
+  show('err-date', !date || new Date(date) < new Date(new Date().toDateString()));
+  show('err-slot', !selectedSlot);
+  if (!ok) return;
+  document.getElementById('booking-form').style.display = 'none';
+  document.getElementById('booking-success').classList.add('show');
+  toast('Temujanji diterima!');
+}
+function resetBooking() {
+  document.getElementById('booking-form').reset();
+  document.querySelectorAll('.slot').forEach((x) => x.classList.remove('active'));
+  selectedSlot = null;
+  document.getElementById('booking-success').classList.remove('show');
+  document.getElementById('booking-form').style.display = 'block';
+}
+
+// Admin
+function adminLogin() {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-main').style.display = 'block';
+  toast('Log masuk sebagai admin');
+}
+let adminFilter = 'all';
+function filterAdmin(tab) {
+  adminFilter = tab;
+  document.querySelectorAll('.tabs .tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === tab));
+  applyAdmin();
+}
+function searchAdmin(q) {
+  document.querySelectorAll('#admin-body tr').forEach((tr) => {
+    const text = tr.textContent.toLowerCase();
+    const matchStatus = adminFilter === 'all' || tr.dataset.status === adminFilter;
+    tr.style.display = matchStatus && (!q || text.includes(q.toLowerCase())) ? '' : 'none';
+  });
+  updateEmpty();
+}
+function applyAdmin() {
+  document.querySelectorAll('#admin-body tr').forEach((tr) => {
+    tr.style.display = adminFilter === 'all' || tr.dataset.status === adminFilter ? '' : 'none';
+  });
+  updateEmpty();
+}
+function updateEmpty() {
+  const visible = Array.from(document.querySelectorAll('#admin-body tr')).filter((tr) => tr.style.display !== 'none').length;
+  document.getElementById('admin-empty').style.display = visible === 0 ? 'block' : 'none';
+}
+
+let toastTimer = null;
+function toast(msg) {
+  document.getElementById('toast-text').textContent = msg;
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+</script>
+</body>
+</html>
