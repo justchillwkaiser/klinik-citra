@@ -83,7 +83,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
         <table className="min-w-[720px]">
           <thead>
             <tr>
-              <th>Nama</th>
+              <th className="sticky-col">Nama</th>
               <th>Telefon</th>
               <th>Rawatan</th>
               <th>Tarikh</th>
@@ -95,17 +95,17 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
           <tbody>
             {visible.map((a) => (
               <tr key={a.id}>
-                <td className="font-semibold">{a.name}</td>
-                <td>{a.phone}</td>
-                <td>{a.service}</td>
-                <td>{fmtDate(a.date)}</td>
-                <td>{a.time}</td>
-                <td>
+                <td className="sticky-col whitespace-nowrap font-semibold">{a.name}</td>
+                <td className="whitespace-nowrap">{a.phone}</td>
+                <td className="whitespace-nowrap">{a.service}</td>
+                <td className="whitespace-nowrap">{fmtDate(a.date)}</td>
+                <td className="whitespace-nowrap">{a.time}</td>
+                <td className="whitespace-nowrap">
                   <span className={`badge ${BADGE_CLASS[a.status] ?? "badge-baru"}`}>
                     {a.status}
                   </span>
                 </td>
-                <td>
+                <td className="whitespace-nowrap">
                   <div className="flex gap-1.5">
                     {a.status === "BARU" && (
                       <>
