@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klinik Citra — Geometric Direction</title>
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ffffff;
+    --surface-2: #ebe4d8;
+    --text: #1a1a1a;
+    --text-soft: #5a5a5a;
+    --line: #d4c8b8;
+    --accent: #c4703f;
+    --accent-soft: #f0d9c8;
+    --teal: #2d6a5f;
+    --teal-soft: #d4e5e0;
+    --radius: 0px;
+    --font-sans: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Geometric elements */
+  .geo-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  
+  /* Navigation — attached to top */
+  .nav {
+    display: flex;
+    align-items: stretch;
+    background: var(--surface);
+    border-bottom: 2px solid var(--text);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-right: 2px solid var(--text);
+  }
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--teal);
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+  .brand-icon::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 2px solid white;
+  }
+  .brand-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+  .brand-text {
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .nav-links {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+  }
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-right: 1px solid var(--line);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .nav-links a:hover {
+    background: var(--surface-2);
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+  .nav-links a:hover::after {
+    transform: scaleX(1);
+  }
+  .nav-cta {
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    background: var(--teal);
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .nav-cta:hover {
+    background: var(--accent);
+  }
+  
+  /* Hero — spatial layout */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 80vh;
+  }
+  .hero-content {
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--surface);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--teal-soft);
+    border: 2px solid var(--teal);
+    margin-bottom: 32px;
+    width: fit-content;
+  }
+  .hero h1 {
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .hero h1 .accent {
+    color: var(--accent);
+    display: block;
+  }
+  .hero-desc {
+    font-size: 18px;
+    color: var(--text-soft);
+    margin-bottom: 40px;
+    max-width: 45ch;
+  }
+  .hero-visual {
+    background: var(--teal-soft);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  /* Isometric room illustration */
+  .iso-room {
+    width: 80%;
+    height: 80%;
+    position: relative;
+  }
+  .iso-floor {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%) rotateX(60deg) rotateZ(-45deg);
+    width: 300px;
+    height: 300px;
+    background: var(--teal);
+    opacity: 0.2;
+  }
+  .iso-wall-left {
+    position: absolute;
+    bottom: 10%;
+    left: 15%;
+    width: 150px;
+    height: 200px;
+    background: var(--teal);
+    opacity: 0.3;
+    transform: skewY(-15deg);
+  }
+  .iso-wall-right {
+    position: absolute;
+    bottom: 10%;
+    right: 15%;
+    width: 150px;
+    height: 200px;
+    background: var(--teal);
+    opacity: 0.4;
+    transform: skewY(15deg);
+  }
+  .iso-chair {
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 100px;
+  }
+  .iso-chair-base {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 20px;
+    background: var(--accent);
+  }
+  .iso-chair-seat {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 15px;
+    background: var(--accent);
+  }
+  .iso-chair-back {
+    position: absolute;
+    bottom: 35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px;
+    height: 60px;
+    background: var(--accent);
+  }
+  .iso-marker {
+    position: absolute;
+    top: 20%;
+    right: 20%;
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  /* CTA — spatial action */
+  .btn-spatial {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 40px;
+    background: var(--text);
+    color: white;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .btn-spatial::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+  .btn-spatial:hover::after {
+    transform: scaleX(1);
+  }
+  .btn-spatial:active {
+    transform: translateY(2px);
+  }
+  
+  /* Services — circular dial */
+  .section {
+    padding: 80px 64px;
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--text);
+  }
+  .section-title {
+    font-size: 48px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  .services-container {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 48px;
+  }
+  .services-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .service-nav-item {
+    padding: 16px;
+    background: var(--surface);
+    border: 2px solid var(--line);
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .service-nav-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
+  .service-nav-item:hover,
+  .service-nav-item.active {
+    border-color: var(--text);
+    background: var(--surface-2);
+  }
+  .service-nav-item.active::before {
+    transform: scaleY(1);
+  }
+  .service-display {
+    background: var(--surface);
+    border: 2px solid var(--text);
+    padding: 48px;
+    position: relative;
+  }
+  .service-display::before {
+    content: attr(data-index);
+    position: absolute;
+    top: -20px;
+    right: 24px;
+    font-family: var(--font-mono);
+    font-size: 80px;
+    font-weight: 700;
+    color: var(--accent-soft);
+    line-height: 1;
+  }
+  .service-name {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .service-desc {
+    font-size: 16px;
+    color: var(--text-soft);
+    margin-bottom: 24px;
+    max-width: 50ch;
+  }
+  .service-meta {
+    display: flex;
+    gap: 24px;
+  }
+  .service-price {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .service-duration {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--text-soft);
+    padding-top: 8px;
+  }
+  
+  /* Center CTA — floating element */
+  .cta-section {
+    padding: 80px 64px;
+    background: var(--teal);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: var(--teal-soft);
+    opacity: 0.1;
+    transform: rotate(45deg);
+  }
+  .cta-inner {
+    max-width: 600px;
+    position: relative;
+  }
+  .cta-inner .geo-label {
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .cta-inner h2 {
+    color: white;
+    font-size: 48px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+  .cta-inner p {
+    color: rgba(255,255,255,0.8);
+    font-size: 18px;
+    margin-bottom: 32px;
+  }
+  .btn-cta-float {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 48px;
+    background: white;
+    color: var(--teal);
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+  }
+  .btn-cta-float:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 rgba(0,0,0,0.2);
+  }
+  .btn-cta-float:active {
+    transform: translate(0, 0);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+  }
+  
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-visual { min-height: 300px; }
+    .hero-content { padding: 32px; }
+    .hero h1 { font-size: 36px; }
+    .section { padding: 48px 32px; }
+    .services-container { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+    </div>
+    <span class="brand-text">Klinik Citra</span>
+  </div>
+  <div class="nav-links">
+    <a href="#rawatan">Rawatan</a>
+    <a href="#kenapa">Kenapa</a>
+    <a href="#lokasi">Lokasi</a>
+  </div>
+  <a href="/booking" class="nav-cta">Tempah</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="geo-label">Ipoh, Perak</span>
+    </div>
+    <h1>Senyuman <span class="accent">Sihat</span> Bermula Di Sini</h1>
+    <p class="hero-desc">Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati.</p>
+    <button class="btn-spatial">Buat Temujanji</button>
+  </div>
+  <div class="hero-visual">
+    <div class="iso-room">
+      <div class="iso-floor"></div>
+      <div class="iso-wall-left"></div>
+      <div class="iso-wall-right"></div>
+      <div class="iso-chair">
+        <div class="iso-chair-base"></div>
+        <div class="iso-chair-seat"></div>
+        <div class="iso-chair-back"></div>
+      </div>
+      <div class="iso-marker">You Are Here</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="rawatan">
+  <div class="section-header">
+    <h2 class="section-title">Rawatan</h2>
+    <span class="geo-label">06 Perkhidmatan</span>
+  </div>
+  <div class="services-container">
+    <div class="services-nav">
+      <button class="service-nav-item active">Pembersihan</button>
+      <button class="service-nav-item">Cabutan</button>
+      <button class="service-nav-item">Tampalan</button>
+      <button class="service-nav-item">Crown</button>
+      <button class="service-nav-item">Whitening</button>
+      <button class="service-nav-item">Braces</button>
+    </div>
+    <div class="service-display" data-index="01">
+      <h3 class="service-name">Pembersihan Gigi</h3>
+      <p class="service-desc">Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih. Rawatan pencegahan asas untuk senyuman yang sihat.</p>
+      <div class="service-meta">
+        <span class="service-price">RM 80+</span>
+        <span class="service-duration">45-60 minit</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-inner">
+    <span class="geo-label">Tempahan Dibuka</span>
+    <h2>Tempah Slot Rawatan Anda</h2>
+    <p>Pilih tarikh dan masa yang sesuai. Pengesahan segera melalui WhatsApp.</p>
+    <button class="btn-cta-float">Buat Temujanji →</button>
+  </div>
+</section>
+
+</body>
+</html>

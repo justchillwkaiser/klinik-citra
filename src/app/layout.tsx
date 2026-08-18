@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Manrope, IBM_Plex_Mono } from "next/font/google";
+import { Inter, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  style: ["normal", "italic"],
   subsets: ["latin"],
   display: "swap",
 });
@@ -23,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ms" className={`${manrope.variable} ${plexMono.variable}`}>
+    <html lang="ms" className={`${inter.variable} ${playfair.variable} ${plexMono.variable}`}>
       <body className="bg-cream text-espresso min-h-dvh">{children}</body>
     </html>
   );

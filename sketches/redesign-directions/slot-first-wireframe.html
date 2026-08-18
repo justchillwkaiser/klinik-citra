@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klinik Citra — Slot-First Wireframe</title>
+<style>
+  :root {
+    --bg: #f8f7f5;
+    --surface: #ffffff;
+    --surface-2: #f0efec;
+    --surface-3: #e8e6e2;
+    --text: #1a1a1a;
+    --text-soft: #5a5a5a;
+    --text-faint: #9a9a9a;
+    --line: #d8d5d0;
+    --accent: #0d6e5f;
+    --accent-soft: #d4ebe5;
+    --accent-glow: #00d4aa;
+    --warn: #c4703f;
+    --warn-soft: #f0d9c8;
+    --radius: 6px;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Topbar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: var(--radius);
+    display: grid;
+    place-items: center;
+  }
+  .brand-mark svg {
+    width: 16px;
+    height: 16px;
+    fill: white;
+  }
+  .brand-name {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .topbar-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-glow);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .topbar-tel {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-soft);
+    text-decoration: none;
+  }
+  
+  /* Main layout */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Slot matrix section */
+  .slot-section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .slot-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .slot-subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  /* Day selector — horizontal scroll */
+  .day-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .day-scroll::-webkit-scrollbar { display: none; }
+  .day-btn {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 70px;
+  }
+  .day-btn:hover {
+    border-color: var(--accent);
+  }
+  .day-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .day-btn .day-name {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+  }
+  .day-btn .day-date {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  /* Time slots grid */
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  .time-slot {
+    padding: 12px 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  .time-slot:hover:not(.booked):not(.selected) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .time-slot.booked {
+    background: var(--surface-3);
+    color: var(--text-faint);
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+  .time-slot.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 2px 12px rgba(13, 110, 95, 0.3);
+  }
+  .time-slot .slot-status {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .time-slot.booked .slot-status {
+    background: var(--text-faint);
+  }
+  .time-slot.selected .slot-status {
+    background: white;
+  }
+  
+  /* Divider with scroll hint */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+  .divider .arrow {
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+  
+  /* Services — expandable rows */
+  .services-section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .services-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .services-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .services-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  
+  .service-row {
+    border-bottom: 1px solid var(--line);
+    transition: background 0.15s ease;
+  }
+  .service-row:last-child {
+    border-bottom: none;
+  }
+  .service-row:hover {
+    background: var(--surface-2);
+  }
+  .service-row.expanded {
+    background: var(--surface-2);
+  }
+  
+  .service-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    gap: 16px;
+  }
+  .service-toggle {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    color: var(--text-faint);
+    transition: transform 0.2s ease;
+  }
+  .service-row.expanded .service-toggle {
+    transform: rotate(90deg);
+    color: var(--accent);
+  }
+  .service-info {
+    flex: 1;
+  }
+  .service-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .service-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .service-price {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  
+  .service-detail {
+    display: none;
+    padding: 0 20px 20px 60px;
+    border-top: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .service-row.expanded .service-detail {
+    display: block;
+  }
+  .service-desc {
+    font-size: 14px;
+    color: var(--text-soft);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    padding-top: 16px;
+  }
+  
+  /* Inline slot picker for service */
+  .inline-slots {
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 8px;
+  }
+  .inline-slots-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .inline-day-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    margin-bottom: 12px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .inline-day-scroll::-webkit-scrollbar { display: none; }
+  .inline-day-btn {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .inline-day-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .inline-time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
+  }
+  .inline-time-slot {
+    padding: 8px 4px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .inline-time-slot:hover:not(.booked):not(.selected) {
+    border-color: var(--accent);
+  }
+  .inline-time-slot.booked {
+    background: var(--surface-3);
+    color: var(--text-faint);
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+  .inline-time-slot.selected {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  
+  /* Booking state — sticky bottom bar */
+  .booking-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--text);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 200;
+  }
+  .booking-bar.visible {
+    transform: translateY(0);
+  }
+  .booking-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .booking-service {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .booking-slot {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  .booking-price {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-glow);
+  }
+  .btn-confirm {
+    padding: 12px 24px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-confirm:hover {
+    background: #0a5a4e;
+  }
+  
+  /* Info sections */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+  }
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .info-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-soft);
+  }
+  .info-card p {
+    font-size: 14px;
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .topbar-tel { display: none; }
+    .info-grid { grid-template-columns: 1fr; }
+    .time-grid { grid-template-columns: repeat(4, 1fr); }
+    .service-header { padding: 12px 16px; }
+    .service-detail { padding-left: 16px; }
+    .booking-bar { flex-direction: column; gap: 12px; align-items: stretch; }
+    .booking-info { justify-content: space-between; }
+  }
+  
+  /* Utility */
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+    </div>
+    <span class="brand-name">KLINIK CITRA</span>
+  </div>
+  <div class="topbar-status">
+    <span class="status-dot"></span>
+    <span>Buka Sekarang</span>
+  </div>
+  <a href="tel:052558899" class="topbar-tel">05-255 8899</a>
+</header>
+
+<main class="main">
+  
+  <!-- Slot Matrix -->
+  <section class="slot-section">
+    <div class="slot-header">
+      <div>
+        <h1 class="slot-title">Pilih Slot Temujanji</h1>
+        <span class="slot-subtitle">Availability Live</span>
+      </div>
+      <span class="slot-subtitle" id="selectedServiceLabel">Semua Rawatan</span>
+    </div>
+    
+    <!-- Day selector — horizontal scroll -->
+    <div class="day-scroll" id="dayScroll">
+      <!-- Generated by JS -->
+    </div>
+    
+    <!-- Time slots -->
+    <div class="time-grid" id="timeGrid">
+      <!-- Generated by JS -->
+    </div>
+  </section>
+  
+  <!-- Divider -->
+  <div class="divider">
+    <span>Atau terokai rawatan dulu</span>
+    <span class="arrow">↓</span>
+  </div>
+  
+  <!-- Services — expandable rows -->
+  <section class="services-section">
+    <div class="services-header">
+      <h2 class="services-title">Rawatan & Harga</h2>
+      <span class="services-count">6 perkhidmatan</span>
+    </div>
+    
+    <div id="servicesList">
+      <!-- Generated by JS -->
+    </div>
+  </section>
+  
+  <!-- Info sections -->
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>Doktor Bertugas</h3>
+      <p>Dr. Aminah binti Hassan — Pengalaman 12 tahun dalam pergigian keluarga dan estetik. Pakar dalam rawatan minimally invasive.</p>
+    </div>
+    <div class="info-card">
+      <h3>Lokasi & Waktu</h3>
+      <p>No. 12, Jalan Dato Ahmad, 30000 Ipoh, Perak<br>
+      Isnin - Sabtu: 9:00 pagi - 5:00 petang<br>
+      Ahad: Tutup</p>
+    </div>
+  </div>
+  
+  <!-- Spacer for booking bar -->
+  <div style="height: 80px;"></div>
+  
+</main>
+
+<!-- Booking bar — sticky bottom -->
+<div class="booking-bar" id="bookingBar">
+  <div class="booking-info">
+    <div>
+      <div class="booking-service" id="bookingService">Pilih Rawatan</div>
+      <div class="booking-slot" id="bookingSlot">Belum ada slot dipilih</div>
+    </div>
+    <div class="booking-price" id="bookingPrice">—</div>
+  </div>
+  <button class="btn-confirm" onclick="confirmBooking()">Sahkan Temujanji</button>
+</div>
+
+<script>
+// Data
+const DAYS = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+const SERVICES = [
+  { id: 'scaling', name: 'Pembersihan Gigi', code: 'SCALING', price: 80, duration: '45-60 min', desc: 'Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih.' },
+  { id: 'extraction', name: 'Cabutan Gigi', code: 'EXTRACT', price: 60, duration: '30-45 min', desc: 'Cabutan selamat dan selesa, termasuk gigi bungsu bermasalah.' },
+  { id: 'filling', name: 'Tampalan', code: 'FILLING', price: 90, duration: '30-60 min', desc: 'Tampalan estetik warna gigi untuk gigi berlubang dan rosak.' },
+  { id: 'crown', name: 'Crown & Veneer', code: 'CROWN', price: 350, duration: '60-90 min', desc: 'Pulihkan dan perbaiki bentuk gigi dengan crown dan veneer.' },
+  { id: 'whitening', name: 'Whitening', code: 'WHITEN', price: 250, duration: '60 min', desc: 'Pemutihan gigi profesional untuk senyuman lebih cerah.' },
+  { id: 'braces', name: 'Braces', code: 'BRACES', price: 2500, duration: 'Consult', desc: 'Rawatan ortodontik untuk susunan gigi yang lebih kemas.' }
+];
+
+const TIME_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+
+// State
+let selectedService = null;
+let selectedDay = null;
+let selectedTime = null;
+let expandedService = null;
+
+// Generate next 7 days (skip Sunday for clinic closed)
+function generateDays() {
+  const days = [];
+  const today = new Date();
+  let count = 0;
+  let offset = 0;
+  
+  while (count < 7) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + offset);
+    if (date.getDay() !== 0) { // Skip Sunday
+      days.push({
+        date: date,
+        dayName: DAYS[date.getDay()],
+        dayNum: date.getDate(),
+        month: date.toLocaleString('ms', { month: 'short' }),
+        fullDate: date.toISOString().split('T')[0]
+      });
+      count++;
+    }
+    offset++;
+  }
+  return days;
+}
+
+const availableDays = generateDays();
+
+// Mock booked slots (random for demo)
+function isSlotBooked(dayIndex, timeIndex) {
+  // Deterministic pseudo-random for demo
+  const seed = dayIndex * 7 + timeIndex;
+  return (seed % 4 === 0) || (seed % 7 === 0);
+}
+
+// Initialize
+function init() {
+  renderDays();
+  renderServices();
+  selectDay(0); // Select first day by default
+}
+
+function renderDays() {
+  const container = document.getElementById('dayScroll');
+  container.innerHTML = availableDays.map((day, i) => `
+    <button class="day-btn ${i === 0 ? 'active' : ''}" onclick="selectDay(${i})" data-index="${i}">
+      <span class="day-name">${day.dayName}</span>
+      <span class="day-date">${day.dayNum} ${day.month}</span>
+    </button>
+  `).join('');
+}
+
+function renderTimeSlots() {
+  const container = document.getElementById('timeGrid');
+  container.innerHTML = TIME_SLOTS.map((time, i) => {
+    const booked = isSlotBooked(selectedDay, i);
+    return `
+      <button class="time-slot ${booked ? 'booked' : ''} ${selectedTime === i ? 'selected' : ''}" 
+              onclick="selectTime(${i})" 
+              ${booked ? 'disabled' : ''}>
+        ${time}
+        ${booked ? '<span class="slot-status"></span>' : ''}
+      </button>
+    `;
+  }).join('');
+}
+
+function renderServices() {
+  const container = document.getElementById('servicesList');
+  container.innerHTML = SERVICES.map(service => `
+    <div class="service-row ${expandedService === service.id ? 'expanded' : ''}" data-service="${service.id}">
+      <div class="service-header" onclick="toggleService('${service.id}')">
+        <span class="service-toggle">▸</span>
+        <div class="service-info">
+          <div class="service-name">${service.name}</div>
+          <div class="service-meta">${service.code} · ${service.duration}</div>
+        </div>
+        <span class="service-price">RM ${service.price}</span>
+      </div>
+      <div class="service-detail">
+        <p class="service-desc">${service.desc}</p>
+        <div class="inline-slots">
+          <span class="inline-slots-label">Slot untuk ${service.name}</span>
+          <div class="inline-day-scroll" id="inline-days-${service.id}">
+            ${availableDays.map((day, i) => `
+              <button class="inline-day-btn ${i === selectedDay ? 'active' : ''}" 
+                      onclick="selectInlineDay('${service.id}', ${i})">
+                ${day.dayNum} ${day.month}
+              </button>
+            `).join('')}
+          </div>
+          <div class="inline-time-grid" id="inline-times-${service.id}">
+            ${TIME_SLOTS.map((time, i) => {
+              const booked = isSlotBooked(selectedDay, i);
+              return `
+                <button class="inline-time-slot ${booked ? 'booked' : ''} ${selectedTime === i && selectedService === service.id ? 'selected' : ''}" 
+                        onclick="selectInlineTime('${service.id}', ${i})"
+                        ${booked ? 'disabled' : ''}>
+                  ${time}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Event handlers
+function selectDay(index) {
+  selectedDay = index;
+  document.querySelectorAll('.day-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === index);
+  });
+  renderTimeSlots();
+  updateInlineDays();
+}
+
+function selectTime(index) {
+  selectedTime = index;
+  selectedService = null; // Reset service when selecting from main matrix
+  document.getElementById('selectedServiceLabel').textContent = 'Semua Rawatan';
+  renderTimeSlots();
+  updateBookingBar();
+}
+
+function toggleService(serviceId) {
+  expandedService = expandedService === serviceId ? null : serviceId;
+  renderServices();
+}
+
+function selectInlineDay(serviceId, dayIndex) {
+  selectedDay = dayIndex;
+  selectedService = serviceId;
+  const service = SERVICES.find(s => s.id === serviceId);
+  document.getElementById('selectedServiceLabel').textContent = service.name;
+  
+  // Update main day selector
+  document.querySelectorAll('.day-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === dayIndex);
+  });
+  
+  // Update inline day buttons for this service
+  document.querySelectorAll(`#inline-days-${serviceId} .inline-day-btn`).forEach((btn, i) => {
+    btn.classList.toggle('active', i === dayIndex);
+  });
+  
+  renderTimeSlots();
+  renderInlineTimes(serviceId);
+  updateBookingBar();
+}
+
+function selectInlineTime(serviceId, timeIndex) {
+  selectedTime = timeIndex;
+  selectedService = serviceId;
+  const service = SERVICES.find(s => s.id === serviceId);
+  document.getElementById('selectedServiceLabel').textContent = service.name;
+  
+  // Update all inline time slots for this service
+  document.querySelectorAll(`#inline-times-${serviceId} .inline-time-slot`).forEach((slot, i) => {
+    slot.classList.toggle('selected', i === timeIndex);
+  });
+  
+  // Also update main time grid
+  renderTimeSlots();
+  updateBookingBar();
+}
+
+function renderInlineTimes(serviceId) {
+  const container = document.getElementById(`inline-times-${serviceId}`);
+  if (!container) return;
+  
+  container.innerHTML = TIME_SLOTS.map((time, i) => {
+    const booked = isSlotBooked(selectedDay, i);
+    const isSelected = selectedTime === i && selectedService === serviceId;
+    return `
+      <button class="inline-time-slot ${booked ? 'booked' : ''} ${isSelected ? 'selected' : ''}" 
+              onclick="selectInlineTime('${serviceId}', ${i})"
+              ${booked ? 'disabled' : ''}>
+        ${time}
+      </button>
+    `;
+  }).join('');
+}
+
+function updateInlineDays() {
+  SERVICES.forEach(service => {
+    const container = document.getElementById(`inline-days-${service.id}`);
+    if (container) {
+      container.querySelectorAll('.inline-day-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === selectedDay);
+      });
+    }
+    renderInlineTimes(service.id);
+  });
+}
+
+function updateBookingBar() {
+  const bar = document.getElementById('bookingBar');
+  const serviceEl = document.getElementById('bookingService');
+  const slotEl = document.getElementById('bookingSlot');
+  const priceEl = document.getElementById('bookingPrice');
+  
+  if (selectedTime !== null) {
+    bar.classList.add('visible');
+    const day = availableDays[selectedDay];
+    const time = TIME_SLOTS[selectedTime];
+    
+    if (selectedService) {
+      const service = SERVICES.find(s => s.id === selectedService);
+      serviceEl.textContent = service.name;
+      priceEl.textContent = `RM ${service.price}`;
+    } else {
+      serviceEl.textContent = 'Pilih Rawatan di Klinik';
+      priceEl.textContent = '—';
+    }
+    
+    slotEl.textContent = `${day.dayName}, ${day.dayNum} ${day.month} · ${time}`;
+  } else {
+    bar.classList.remove('visible');
+  }
+}
+
+function confirmBooking() {
+  if (selectedTime === null) return;
+  
+  const day = availableDays[selectedDay];
+  const time = TIME_SLOTS[selectedTime];
+  const service = selectedService ? SERVICES.find(s => s.id === selectedService) : null;
+  
+  alert(`Temujanji disahkan!\n\n${service ? service.name : 'Rawatan am'}\n${day.dayName}, ${day.dayNum} ${day.month}\nMasa: ${time}\n\nKami akan hantar pengesahan melalui WhatsApp.`);
+}
+
+// Start
+init();
+</script>
+
+</body>
+</html>

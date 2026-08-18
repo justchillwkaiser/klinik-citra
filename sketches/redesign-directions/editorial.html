@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klinik Citra — Editorial Direction</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --surface-2: #f0ede8;
+    --text: #1a1a1a;
+    --text-soft: #5a5a5a;
+    --text-faint: #9a9a9a;
+    --line: #e0ddd8;
+    --accent: #8b4513;
+    --accent-soft: #f5e6d3;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Source Sans 3', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Editorial elements */
+  .marginalia {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+  }
+  
+  .rule-line {
+    height: 1px;
+    background: var(--line);
+    position: relative;
+  }
+  .rule-line::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 40px;
+    height: 5px;
+    background: var(--accent);
+  }
+  
+  /* Navigation */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .brand-name {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    font-size: 14px;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-soft);
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+  
+  /* CTA — text link with animated underline */
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+  }
+  .cta-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  .cta-link:hover::after {
+    transform: scaleX(0.3);
+    transform-origin: left;
+  }
+  .cta-link .arrow {
+    transition: transform 0.3s ease;
+  }
+  .cta-link:hover .arrow {
+    transform: translateX(4px);
+  }
+  
+  /* Hero — journal layout */
+  .hero {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 80px 32px;
+    position: relative;
+  }
+  .hero::before {
+    content: 'Vol. 01 — Edisi Keluarga';
+    position: absolute;
+    top: 40px;
+    right: 32px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+  }
+  .hero-kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-kicker::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    font-size: 18px;
+    color: var(--text-soft);
+    max-width: 55ch;
+    margin-bottom: 40px;
+    line-height: 1.8;
+  }
+  .hero-desc::first-letter {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 700;
+    float: left;
+    line-height: 0.8;
+    margin: 8px 12px 0 0;
+    color: var(--accent);
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .hero-meta-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+  .hero-meta-item strong {
+    display: block;
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  
+  /* Services — table of contents style */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 32px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .section-number {
+    font-family: var(--serif);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--accent-soft);
+    line-height: 1;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  
+  .services-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .service-entry {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+    transition: all 0.2s ease;
+  }
+  .service-entry:hover {
+    background: var(--surface-2);
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .service-number {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-soft);
+    line-height: 1;
+  }
+  .service-entry:hover .service-number {
+    color: var(--accent);
+  }
+  .service-content h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .service-content p {
+    font-size: 15px;
+    color: var(--text-soft);
+    line-height: 1.7;
+  }
+  .service-price {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    white-space: nowrap;
+    padding-top: 4px;
+  }
+  
+  /* Testimonial — pull quote */
+  .testimonial-section {
+    background: var(--surface-2);
+    padding: 80px 32px;
+    margin: 64px 0;
+  }
+  .testimonial-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .testimonial-quote {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-style: italic;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .testimonial-quote::before {
+    content: '"';
+    font-size: 80px;
+    color: var(--accent-soft);
+    position: absolute;
+    top: -20px;
+    left: -30px;
+    font-family: var(--serif);
+  }
+  .testimonial-author {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+  }
+  .testimonial-author strong {
+    display: block;
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 4px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--sans);
+  }
+  
+  /* Center CTA — editorial style */
+  .cta-center {
+    text-align: center;
+    padding: 80px 32px;
+  }
+  .cta-center .marginalia {
+    margin-bottom: 24px;
+    display: block;
+  }
+  .cta-center h2 {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .cta-center p {
+    color: var(--text-soft);
+    margin-bottom: 32px;
+    max-width: 45ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .btn-editorial {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: var(--text);
+    color: white;
+    border: none;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-editorial:hover {
+    background: var(--accent);
+  }
+  
+  /* Ampersand divider */
+  .ampersand-divider {
+    text-align: center;
+    padding: 40px 0;
+  }
+  .ampersand-divider span {
+    font-family: var(--serif);
+    font-size: 120px;
+    color: var(--accent-soft);
+    line-height: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 36px; }
+    .hero::before { display: none; }
+    .service-entry { grid-template-columns: 40px 1fr; }
+    .service-price { grid-column: 2; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <span class="brand-name">Klinik Citra</span>
+    <span class="brand-sub">Pergigian Keluarga</span>
+  </div>
+  <div class="nav-links">
+    <a href="#rawatan">Rawatan</a>
+    <a href="#kenapa">Kenapa Kami</a>
+    <a href="#lokasi">Lokasi</a>
+  </div>
+  <a href="/booking" class="cta-link">Buat Temujanji <span class="arrow">→</span></a>
+</nav>
+
+<section class="hero">
+  <div class="hero-kicker">Klinik Keluarga di Ipoh, Perak</div>
+  <h1>Senyuman sihat bermula <em>di sini.</em></h1>
+  <p class="hero-desc">Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati. Tiada menunggu berjam-jam. Kami percaya setiap senyuman mempunyai cerita, dan setiap cerita bermula dengan keyakinan.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <strong>Waktu Operasi</strong>
+      Isnin - Sabtu<br>9:00 pagi - 5:00 petang
+    </div>
+    <div class="hero-meta-item">
+      <strong>Lokasi</strong>
+      No. 12, Jalan Dato Ahmad<br>30000 Ipoh, Perak
+    </div>
+    <div class="hero-meta-item">
+      <strong>Hubungi</strong>
+      05-255 8899<br>hello@klinikcitra.my
+    </div>
+  </div>
+</section>
+
+<div class="rule-line"></div>
+
+<section class="section" id="rawatan">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <h2 class="section-title">Perkhidmatan Pergigian</h2>
+  </div>
+  <div class="services-list">
+    <div class="service-entry">
+      <span class="service-number">01</span>
+      <div class="service-content">
+        <h3>Pembersihan Gigi</h3>
+        <p>Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih. Rawatan pencegahan asas untuk senyuman yang sihat.</p>
+      </div>
+      <span class="service-price">Dari RM 80</span>
+    </div>
+    <div class="service-entry">
+      <span class="service-number">02</span>
+      <div class="service-content">
+        <h3>Cabutan Gigi</h3>
+        <p>Cabutan selamat dan selesa, termasuk gigi bungsu bermasalah. Prosedur dilakukan dengan teknik minimally invasive.</p>
+      </div>
+      <span class="service-price">Dari RM 60</span>
+    </div>
+    <div class="service-entry">
+      <span class="service-number">03</span>
+      <div class="service-content">
+        <h3>Tampalan</h3>
+        <p>Tampalan estetik warna gigi untuk gigi berlubang dan rosak. Bahan komposit berkualiti tinggi untuk hasil yang tahan lama.</p>
+      </div>
+      <span class="service-price">Dari RM 90</span>
+    </div>
+    <div class="service-entry">
+      <span class="service-number">04</span>
+      <div class="service-content">
+        <h3>Crown & Veneer</h3>
+        <p>Pulihkan dan perbaiki bentuk gigi dengan crown dan veneer. Penyelesaian estetik untuk senyuman yang sempurna.</p>
+      </div>
+      <span class="service-price">Dari RM 350</span>
+    </div>
+    <div class="service-entry">
+      <span class="service-number">05</span>
+      <div class="service-content">
+        <h3>Whitening</h3>
+        <p>Pemutihan gigi profesional untuk senyuman lebih cerah. Hasil yang kelihatan selepas satu sesi rawatan.</p>
+      </div>
+      <span class="service-price">Dari RM 250</span>
+    </div>
+    <div class="service-entry">
+      <span class="service-number">06</span>
+      <div class="service-content">
+        <h3>Braces</h3>
+        <p>Rawatan ortodontik untuk susunan gigi yang lebih kemas. Pilihan braces konvensional dan estetik tersedia.</p>
+      </div>
+      <span class="service-price">Dari RM 2,500</span>
+    </div>
+  </div>
+</section>
+
+<div class="testimonial-section">
+  <div class="testimonial-inner">
+    <p class="testimonial-quote">Anak saya tak takut lagi ke klinik gigi. Doktor sangat sabar dan terangkan setiap langkah dengan jelas.</p>
+    <div class="testimonial-author">
+      <strong>Nurul Izzah</strong>
+      Ibu kepada 2 anak, Ipoh
+    </div>
+  </div>
+</div>
+
+<div class="ampersand-divider">
+  <span>&</span>
+</div>
+
+<section class="cta-center">
+  <span class="marginalia">Tempahan Dibuka</span>
+  <h2>Mulakan Perjalanan Senyuman Anda</h2>
+  <p>Pilih tarikh dan masa yang sesuai dengan jadual anda. Kami akan hantar pengesahan segera melalui WhatsApp atau emel.</p>
+  <button class="btn-editorial">Buat Temujanji Sekarang →</button>
+</section>
+
+</body>
+</html>

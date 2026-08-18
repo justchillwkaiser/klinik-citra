@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #f6faf8;
+  --color-cream: #faf8f5;
   --color-surface: #ffffff;
-  --color-surface-2: #eaf2ef;
-  --color-espresso: #14201c;
-  --color-taupe: #4d5f58;
-  --color-taupe-faint: #8ba097;
-  --color-line: #dce8e3;
-  --color-accent: #0e7a6b;
-  --color-accent-soft: #d9ede8;
+  --color-surface-2: #f0ebe4;
+  --color-espresso: #1a1a1a;
+  --color-taupe: #5a5a5a;
+  --color-taupe-faint: #9a9a9a;
+  --color-line: #e0d8cc;
+  --color-accent: #0d6e5f;
+  --color-accent-soft: #d4ebe5;
+  --color-accent-dark: #0a5a4e;
   --color-accent-ink: #ffffff;
   --color-ok: #3f6b58;
   --color-ok-bg: #e2ece5;
@@ -21,7 +22,8 @@
   --radius-panel: 16px;
   --radius-ctrl: 10px;
 
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
 
   --shadow-soft: 0 12px 32px rgba(20, 45, 40, 0.08);

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klinik Citra — Variasi C: Split Parallax</title>
+<style>
+  :root {
+    --bg: #faf8f5;
+    --surface: #ffffff;
+    --surface-2: #f0ebe4;
+    --text: #1a1a1a;
+    --text-soft: #5a5a5a;
+    --text-faint: #9a9a9a;
+    --line: #e0d8cc;
+    --accent: #0d6e5f;
+    --accent-soft: #d4ebe5;
+    --warm: #c4703f;
+    --warm-soft: #f0d9c8;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Nav */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+  }
+  .brand-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+  }
+  .brand-name {
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+  .nav-links a {
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover {
+    color: var(--accent);
+  }
+  .btn-nav {
+    padding: 10px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  /* Hero — split with parallax layers */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    padding-top: 68px;
+    position: relative;
+  }
+  .hero-left {
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--accent-soft);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 32px;
+    width: fit-content;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+  }
+  .hero h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: var(--warm-soft);
+    z-index: -1;
+  }
+  .hero-desc {
+    font-size: 18px;
+    color: var(--text-soft);
+    margin-bottom: 40px;
+    max-width: 440px;
+    line-height: 1.7;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+  }
+  .btn-primary {
+    padding: 16px 32px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover {
+    background: #0a5a4e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(13, 110, 95, 0.3);
+  }
+  .btn-secondary {
+    padding: 16px 32px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  
+  /* Hero right — parallax layers */
+  .hero-right {
+    background: linear-gradient(135deg, var(--accent-soft) 0%, #e0f0ea 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .parallax-layer {
+    position: absolute;
+    border-radius: 50%;
+  }
+  .layer-1 {
+    width: 500px;
+    height: 500px;
+    background: rgba(13, 110, 95, 0.08);
+    top: -150px;
+    right: -150px;
+  }
+  .layer-2 {
+    width: 400px;
+    height: 400px;
+    background: rgba(196, 112, 63, 0.06);
+    bottom: -100px;
+    left: -100px;
+  }
+  .layer-3 {
+    width: 300px;
+    height: 300px;
+    background: rgba(13, 110, 95, 0.05);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .hero-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+  }
+  .hero-center-icon {
+    width: 120px;
+    height: 120px;
+    background: var(--surface);
+    border-radius: 24px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 8px 40px rgba(13, 110, 95, 0.15);
+  }
+  .hero-center-icon svg {
+    width: 60px;
+    height: 60px;
+    fill: var(--accent);
+  }
+  .hero-center-text {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-soft);
+  }
+  
+  /* Floating cards for parallax */
+  .float-card {
+    position: absolute;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    z-index: 3;
+  }
+  .float-card-1 {
+    top: 20%;
+    right: 10%;
+    animation: float 5s ease-in-out infinite;
+  }
+  .float-card-2 {
+    bottom: 30%;
+    right: 20%;
+    animation: float 6s ease-in-out infinite reverse;
+  }
+  .float-card-3 {
+    top: 60%;
+    right: 5%;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
+  }
+  .float-card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+  }
+  .float-card-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  
+  /* Services — grid with hover effects */
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .service-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  }
+  .service-card:hover::after {
+    transform: scaleX(1);
+  }
+  .service-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--accent-soft);
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 24px;
+  }
+  .service-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--accent);
+  }
+  .service-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .service-card p {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .service-price {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  
+  /* Trust — horizontal strip */
+  .trust-strip {
+    background: var(--surface-2);
+    padding: 60px 40px;
+    overflow: hidden;
+  }
+  .trust-scroll {
+    display: flex;
+    gap: 40px;
+    animation: scroll 30s linear infinite;
+  }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .trust-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 32px;
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .trust-item svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--accent);
+  }
+  .trust-item span {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  
+  /* Testimonial — centered large */
+  .testimonial-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    text-align: center;
+  }
+  .testimonial-quote {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .testimonial-quote::before {
+    content: '"';
+    font-size: 80px;
+    color: var(--accent-soft);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Georgia, serif;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+  .author-avatar {
+    width: 48px;
+    height: 48px;
+    background: var(--accent-soft);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .author-info {
+    text-align: left;
+  }
+  .author-info h4 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .author-info p {
+    font-size: 14px;
+    color: var(--text-faint);
+  }
+  
+  /* CTA — full width with pattern */
+  .cta-section {
+    background: var(--accent);
+    padding: 100px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 35px,
+      rgba(255,255,255,0.5) 35px,
+      rgba(255,255,255,0.5) 70px
+    );
+  }
+  .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-content h2 {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 16px;
+  }
+  .cta-content p {
+    font-size: 18px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 32px;
+  }
+  .btn-cta-large {
+    padding: 18px 40px;
+    background: white;
+    color: var(--accent);
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-cta-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  
+  /* Footer */
+  .footer {
+    background: var(--text);
+    color: white;
+    padding: 60px 40px 30px;
+  }
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer-brand h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .footer-brand p {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .footer-col h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .footer-col p, .footer-col a {
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    line-height: 1.8;
+    text-decoration: none;
+    display: block;
+  }
+  .footer-col a:hover {
+    color: white;
+  }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 300px; }
+    .hero h1 { font-size: 32px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .footer-content { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+    </div>
+    <span class="brand-name">Klinik Citra</span>
+  </div>
+  <div class="nav-links">
+    <a href="#rawatan">Rawatan</a>
+    <a href="#kenapa">Kenapa Kami</a>
+    <a href="#lokasi">Lokasi</a>
+    <a href="/booking" class="btn-nav">Buat Temujanji</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">
+      <span>Klinik Keluarga · Ipoh</span>
+    </div>
+    <h1>Senyuman sihat <em>bermula di sini.</em></h1>
+    <p class="hero-desc">Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati.</p>
+    <div class="hero-cta">
+      <a href="/booking" class="btn-primary">Buat Temujanji →</a>
+      <a href="https://wa.me/60123456789" class="btn-secondary">WhatsApp</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="parallax-layer layer-1"></div>
+    <div class="parallax-layer layer-2"></div>
+    <div class="parallax-layer layer-3"></div>
+    <div class="hero-center">
+      <div class="hero-center-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <div class="hero-center-text">Pergigian Keluarga</div>
+    </div>
+    <div class="float-card float-card-1">
+      <div class="float-card-label">Rating</div>
+      <div class="float-card-value">4.9/5.0</div>
+    </div>
+    <div class="float-card float-card-2">
+      <div class="float-card-label">Pesakit</div>
+      <div class="float-card-value">5,000+</div>
+    </div>
+    <div class="float-card float-card-3">
+      <div class="float-card-label">Pengalaman</div>
+      <div class="float-card-value">12 Tahun</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="rawatan">
+  <div class="section-header">
+    <div class="section-label">Rawatan Kami</div>
+    <h2 class="section-title">Perkhidmatan Pergigian Lengkap</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <h3>Pembersihan Gigi</h3>
+      <p>Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih.</p>
+      <div class="service-price">Dari RM 80</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <h3>Cabutan Gigi</h3>
+      <p>Cabutan selamat dan selesa, termasuk gigi bungsu bermasalah.</p>
+      <div class="service-price">Dari RM 60</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <h3>Tampalan</h3>
+      <p>Tampalan estetik warna gigi untuk gigi berlubang dan rosak.</p>
+      <div class="service-price">Dari RM 90</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <h3>Crown & Veneer</h3>
+      <p>Pulihkan dan perbaiki bentuk gigi dengan crown dan veneer.</p>
+      <div class="service-price">Dari RM 350</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <h3>Whitening</h3>
+      <p>Pemutihan gigi profesional untuk senyuman lebih cerah.</p>
+      <div class="service-price">Dari RM 250</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      </div>
+      <h3>Braces</h3>
+      <p>Rawatan ortodontik untuk susunan gigi yang lebih kemas.</p>
+      <div class="service-price">Dari RM 2,500</div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="trust-scroll">
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Doktor Berpengalaman 12 Tahun</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Peralatan Moden Digital</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Harga Telus Tanpa Tersembunyi</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Temujanji Dihormati</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Doktor Berpengalaman 12 Tahun</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Peralatan Moden Digital</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Harga Telus Tanpa Tersembunyi</span>
+    </div>
+    <div class="trust-item">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+      <span>Temujanji Dihormati</span>
+    </div>
+  </div>
+</section>
+
+<section class="testimonial-section">
+  <p class="testimonial-quote">Anak saya tak takut lagi ke klinik gigi. Doktor sangat sabar dan terangkan setiap langkah dengan jelas. Harga pun sama macam yang diberitahu.</p>
+  <div class="testimonial-author">
+    <div class="author-avatar">NI</div>
+    <div class="author-info">
+      <h4>Nurul Izzah</h4>
+      <p>Ibu kepada 2 anak, Ipoh</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-pattern"></div>
+  <div class="cta-content">
+    <h2>Sedia Untuk Senyuman Lebih Sihat?</h2>
+    <p>Tempah slot rawatan anda sekarang. Pengesahan segera melalui WhatsApp.</p>
+    <a href="/booking" class="btn-cta-large">Buat Temujanji Sekarang →</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <h3>Klinik Citra</h3>
+      <p>Klinik pergigian keluarga yang komited untuk memberikan rawatan berkualiti dengan harga telus dan perkhidmatan mesra.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Hubungi</h4>
+      <p>05-255 8899</p>
+      <p>hello@klinikcitra.my</p>
+      <p>012-345 6789 (WhatsApp)</p>
+    </div>
+    <div class="footer-col">
+      <h4>Lokasi</h4>
+      <p>No. 12, Jalan Dato Ahmad</p>
+      <p>30000 Ipoh, Perak</p>
+    </div>
+    <div class="footer-col">
+      <h4>Waktu Operasi</h4>
+      <p>Isnin - Jumaat: 9:00 - 17:00</p>
+      <p>Sabtu: 9:00 - 13:00</p>
+      <p>Ahad: Tutup</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 Klinik Citra. Hak cipta terpelihara.
+  </div>
+</footer>
+
+</body>
+</html>

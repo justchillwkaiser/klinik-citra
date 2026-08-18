@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klinik Citra — Instrument Direction</title>
+<style>
+  :root {
+    --bg: #f4f6f5;
+    --surface: #ffffff;
+    --surface-2: #e8ecea;
+    --text: #1a2420;
+    --text-soft: #4a5a52;
+    --text-faint: #8a9a90;
+    --line: #d0d8d4;
+    --accent: #0d6e5f;
+    --accent-glow: #00d4aa;
+    --accent-soft: #d4ebe5;
+    --bezel: #2a3a34;
+    --bezel-light: #3d524a;
+    --radius: 4px;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Technical annotation */
+  .tech-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+  }
+  
+  /* Navigation — control panel style */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-bezel {
+    width: 40px;
+    height: 40px;
+    background: var(--bezel);
+    border-radius: var(--radius);
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+  .brand-bezel::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 1px solid var(--bezel-light);
+    border-radius: 2px;
+  }
+  .brand-bezel svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--accent-glow);
+  }
+  .brand-text {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+  .brand-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-soft);
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-links a::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--line);
+    border-radius: 50%;
+  }
+  .nav-links a:hover::before {
+    background: var(--accent-glow);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+  
+  /* CTA Button — control panel */
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: var(--bezel);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.15s ease;
+  }
+  .btn-cta::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border: 1px solid var(--bezel-light);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .btn-cta:hover {
+    background: var(--bezel-light);
+  }
+  .btn-cta:active {
+    transform: scale(0.98);
+  }
+  .btn-cta .led {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-glow);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--accent-glow); }
+    50% { opacity: 0.5; box-shadow: 0 0 12px var(--accent-glow); }
+  }
+  
+  /* Hero — dental tray layout */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding: 64px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+  }
+  .hero-badge .tech-label {
+    color: var(--accent);
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+  }
+  .hero h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-glow);
+    opacity: 0.3;
+  }
+  .hero-desc {
+    font-size: 16px;
+    color: var(--text-soft);
+    margin-bottom: 28px;
+    max-width: 48ch;
+  }
+  .hero-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-meta span::before {
+    content: '●';
+    margin-right: 6px;
+    color: var(--accent-glow);
+  }
+  
+  /* Dental tray visual */
+  .dental-tray {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+  }
+  .dental-tray::before {
+    content: 'TRAY_01 // STERILE';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    background: var(--bg);
+    padding: 0 8px;
+  }
+  .tray-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .tray-slot {
+    aspect-ratio: 1;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    display: grid;
+    place-items: center;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .tray-slot:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+  .tray-slot::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  .tray-slot svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--text-soft);
+    opacity: 0.6;
+  }
+  .tray-slot:hover svg {
+    fill: var(--accent);
+    opacity: 1;
+  }
+  
+  /* Services — sterilization pouch */
+  .section {
+    padding: 64px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-header {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-top: 8px;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .service-pouch {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  .service-pouch::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--line) 0px,
+      var(--line) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+  .service-pouch:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(13, 110, 95, 0.12);
+  }
+  .service-code {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .service-code .status {
+    color: var(--accent);
+  }
+  .service-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .service-desc {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .service-price {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .service-price::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+  }
+  
+  /* Booking CTA — center panel */
+  .cta-panel {
+    background: var(--bezel);
+    border-radius: 8px;
+    padding: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(0, 212, 170, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 212, 170, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .cta-panel .tech-label {
+    color: var(--accent-glow);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .cta-panel h2 {
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .cta-panel p {
+    color: rgba(255,255,255,0.7);
+    font-size: 15px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .btn-cta-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+  }
+  .btn-cta-large:hover {
+    background: #0a5a4e;
+    box-shadow: 0 0 30px rgba(0, 212, 170, 0.3);
+  }
+  .btn-cta-large .led {
+    width: 10px;
+    height: 10px;
+    background: var(--accent-glow);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="brand-bezel">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 2.5 1.5 4.5 3 5.5.5.3 1 .5 1 1.5s-.5 2-1 3c-.5 1-1 2-1 3 0 1 1 2 2 2s2-1 2-2v-2c0-1 .5-2 1.5-2s1.5 1 1.5 2v2c0 1 1 2 2 2s2-1 2-2c0-1-.5-2-1-3-.5-1-1-2-1-3s.5-1.2 1-1.5c1.5-1 3-3 3-5.5 0-4-3-7-7-7z"/></svg>
+    </div>
+    <div>
+      <div class="brand-text">KLINIK CITRA</div>
+      <div class="brand-sub">Dental Care System</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#rawatan">Rawatan</a>
+    <a href="#kenapa">Kenapa Kami</a>
+    <a href="#lokasi">Lokasi</a>
+  </div>
+  <button class="btn-cta">
+    <span class="led"></span>
+    Initialize Appointment
+  </button>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="hero-badge">
+      <span class="tech-label">Klinik Keluarga · Ipoh, Perak</span>
+    </div>
+    <h1>Senyuman sihat bermula <em>di sini.</em></h1>
+    <p class="hero-desc">Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati. Tiada menunggu berjam-jam.</p>
+    <button class="btn-cta-large">
+      <span class="led"></span>
+      Buat Temujanji Sekarang
+    </button>
+    <div class="hero-meta">
+      <span>Isnin-Sabtu</span>
+      <span>09:00-17:00</span>
+    </div>
+  </div>
+  <div class="dental-tray">
+    <div class="tray-grid">
+      <div class="tray-slot" data-label="Mirror">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4"/></svg>
+      </div>
+      <div class="tray-slot" data-label="Probe">
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M8 6l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <div class="tray-slot" data-label="Scaler">
+        <svg viewBox="0 0 24 24"><path d="M4 20L20 4M16 4h4v4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <div class="tray-slot" data-label="Forceps">
+        <svg viewBox="0 0 24 24"><path d="M8 4v6c0 2 1 3 2 4l2 2 2-2c1-1 2-2 2-4V4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <div class="tray-slot" data-label="Syringe">
+        <svg viewBox="0 0 24 24"><path d="M4 12h16M12 4v16" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      </div>
+      <div class="tray-slot" data-label="Drill">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="rawatan">
+  <div class="section-header">
+    <span class="tech-label">Treatment Protocols</span>
+    <h2 class="section-title">Perkhidmatan Pergigian</h2>
+  </div>
+  <div class="services-grid">
+    <div class="service-pouch">
+      <div class="service-code"><span>SCALING_PROPHYLAXIS</span><span class="status">● READY</span></div>
+      <h3 class="service-name">Pembersihan Gigi</h3>
+      <p class="service-desc">Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih.</p>
+      <div class="service-price">Dari RM 80</div>
+    </div>
+    <div class="service-pouch">
+      <div class="service-code"><span>EXTRACTION_SIMPLE</span><span class="status">● READY</span></div>
+      <h3 class="service-name">Cabutan Gigi</h3>
+      <p class="service-desc">Cabutan selamat dan selesa, termasuk gigi bungsu bermasalah.</p>
+      <div class="service-price">Dari RM 60</div>
+    </div>
+    <div class="service-pouch">
+      <div class="service-code"><span>RESTORATION_FILL</span><span class="status">● READY</span></div>
+      <h3 class="service-name">Tampalan</h3>
+      <p class="service-desc">Tampalan estetik warna gigi untuk gigi berlubang dan rosak.</p>
+      <div class="service-price">Dari RM 90</div>
+    </div>
+    <div class="service-pouch">
+      <div class="service-code"><span>CROWN_VENEER</span><span class="status">● READY</span></div>
+      <h3 class="service-name">Crown & Veneer</h3>
+      <p class="service-desc">Pulihkan dan perbaiki bentuk gigi dengan crown dan veneer.</p>
+      <div class="service-price">Dari RM 350</div>
+    </div>
+    <div class="service-pouch">
+      <div class="service-code"><span>WHITENING_BLEACH</span><span class="status">● READY</span></div>
+      <h3 class="service-name">Whitening</h3>
+      <p class="service-desc">Pemutihan gigi profesional untuk senyuman lebih cerah.</p>
+      <div class="service-price">Dari RM 250</div>
+    </div>
+    <div class="service-pouch">
+      <div class="service-code"><span>ORTHODONTICS</span><span class="status">● READY</span></div>
+      <h3 class="service-name">Braces</h3>
+      <p class="service-desc">Rawatan ortodontik untuk susunan gigi yang lebih kemas.</p>
+      <div class="service-price">Dari RM 2,500</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="cta-panel">
+    <span class="tech-label">System Ready</span>
+    <h2>Tempah Slot Rawatan Anda</h2>
+    <p>Pilih tarikh dan masa yang sesuai. Kami akan hantar pengesahan segera.</p>
+    <button class="btn-cta-large">
+      <span class="led"></span>
+      Reserve Appointment Slot
+    </button>
+  </div>
+</section>
+
+</body>
+</html>
