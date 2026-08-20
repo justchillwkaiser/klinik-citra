@@ -4,9 +4,10 @@ import { BrandMark } from "@/components/brand-mark";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Buat Temujanji - KLINIK CITRA",
+  title: "Buat Temujanji",
   description:
     "Buat temujanji online di Klinik Citra, Ipoh. Pilih rawatan, tarikh dan masa - kami akan hubungi anda untuk pengesahan.",
+  alternates: { canonical: "/booking" },
 };
 
 export default function BookingPage() {

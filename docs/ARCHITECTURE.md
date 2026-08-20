@@ -1,5 +1,7 @@
 # ARCHITECTURE.md — KLINIK CITRA
 
+> Delivery tracking: `.hermes/` (HDS). Lihat `.hermes/HERMES_DELIVERY.md` untuk status fasa dan task semasa.
+
 **Status:** Approved · **Date:** 16 Aug 2026 · **Source:** PRD + DESIGN.md approved
 Rujukan struktur & keputusan architecture. Ikut konvensyen project Haris (Biz Dashboard, Maisara, Kopi Senja).
 

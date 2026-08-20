@@ -43,7 +43,8 @@ Bukan Warm Coffee (Kopi Senja) - palette di-rotate untuk elak pengulangan.
 
 ## Type
 
-- Sans: **Manrope** (display + body) - bersih, klinikal, bukan Inter
+- Sans: **Manrope** (display + body) - bersih, klinikal, bukan Inter (DILAKSANAKAN 20 Ogos 2026 - migrate dari Inter ke Manrope selesai)
+- Serif aksen: **Playfair Display** (quote mark dekoratif sahaja)
 - Mono: **IBM Plex Mono** (metadata/label kecil)
 - Icons: **Phosphor** (satu famili, konsisten)
 

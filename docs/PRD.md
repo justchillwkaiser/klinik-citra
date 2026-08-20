@@ -1,5 +1,7 @@
 # PRD — KLINIK CITRA (Dental Clinic Website + Booking + Admin)
 
+> Delivery tracking: `.hermes/` (HDS). Audit 2026-08-20: 10/20 — remediation pending. Lihat `.hermes/HERMES_DELIVERY.md`.
+
 **Status:** Draft v1 · **Date:** 16 Aug 2026 · **Author:** Sarae (untuk Haris)
 **Source of truth:** Dokumen ini. Sebarang perubahan requirement mesti update PRD dulu, kemudian docs lain.
 

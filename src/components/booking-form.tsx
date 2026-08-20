@@ -45,7 +45,7 @@ export function BookingForm() {
       </div>
       <div className="field">
         <label htmlFor="bk-phone">No. telefon</label>
-        <input id="bk-phone" name="phone" type="tel" placeholder="012-345 6789" required />
+        <input id="bk-phone" name="phone" type="tel" placeholder="012-3456789" required />
       </div>
       <div className="field">
         <label htmlFor="bk-service">Rawatan</label>
@@ -69,7 +69,7 @@ export function BookingForm() {
               key={slot}
               type="button"
               onClick={() => setTime(slot)}
-              className={`rounded-full border px-3.5 py-2 text-[13px] font-semibold transition-colors ${
+              className={`rounded-full border px-4 py-2.5 min-h-[44px] text-[13px] font-semibold transition-colors ${
                 time === slot
                   ? "border-accent bg-accent text-white"
                   : "border-line bg-surface text-taupe hover:text-espresso"
