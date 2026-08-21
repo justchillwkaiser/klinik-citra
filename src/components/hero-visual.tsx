@@ -35,7 +35,7 @@ export function HeroVisual() {
 
       <motion.figure
         style={{ y }}
-        className="relative w-[72%] max-w-[380px] md:max-w-[420px] md:mr-6"
+        className="relative w-[62%] max-w-[300px] md:max-w-[420px] md:mr-6"
       >
         {/* Arch frame */}
         <div
@@ -78,6 +78,7 @@ export function HeroVisual() {
         </div>
 
         {/* Stat panel: structured, bottom-centre, overlaps the arch base */}
+        {/* NOTE: Placeholder stats - ganti dengan data Google Business Profile sebenar */}
         <div className="relative z-10 mx-auto -mt-10 w-[92%] rounded-2xl border border-line bg-surface/95 backdrop-blur-sm shadow-xl">
           <div className="grid grid-cols-2 divide-x divide-line">
             <div className="flex items-center gap-3 px-5 py-4">

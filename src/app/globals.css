@@ -63,6 +63,7 @@ html {
   font-size: 14px;
   font-weight: 700;
   padding: 10px 16px;
+  min-height: 44px;
   transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
   cursor: pointer;
 }
@@ -94,6 +95,7 @@ html {
 .btn-sm {
   padding: 7px 12px;
   font-size: 13px;
+  min-height: 0;
 }
 .btn-block {
   width: 100%;

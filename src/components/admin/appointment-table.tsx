@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, CheckSquare, X } from "@phosphor-icons/react";
+import { Check, CheckSquare, X, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import { updateAppointmentStatusAction } from "@/server/actions/appointment.actions";
 import type { AppointmentRow, AppointmentFilter } from "@/server/services/appointment.service";
 
@@ -21,6 +21,8 @@ const BADGE_CLASS: Record<string, string> = {
   BATAL: "badge-batal",
 };
 
+const PAGE_SIZE = 10;
+
 function fmtDate(d: Date): string {
   return d.toLocaleDateString("ms-MY", { day: "numeric", month: "short" });
 }
@@ -29,6 +31,18 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
   const router = useRouter();
   const [filter, setFilter] = useState<AppointmentFilter>("all");
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [pendingId, setPendingId] = useState<string | null>(null);
+
+  // Debounce search input (300ms) to avoid re-filtering on every keystroke
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1); // reset pagination when the committed query changes
+    }, 300);
+    return () => clearTimeout(t);
+  }, [search]);
 
   const counts: Record<AppointmentFilter, number> = {
     all: items.length,
@@ -38,18 +52,32 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
     BATAL: items.filter((i) => i.status === "BATAL").length,
   };
 
-  const visible = items.filter((i) => {
-    const matchStatus = filter === "all" || i.status === filter;
-    const q = search.trim().toLowerCase();
-    const matchSearch =
-      !q || i.name.toLowerCase().includes(q) || i.phone.toLowerCase().includes(q);
-    return matchStatus && matchSearch;
-  });
+  const visible = useMemo(() => {
+    return items.filter((i) => {
+      const matchStatus = filter === "all" || i.status === filter;
+      const q = debouncedSearch.trim().toLowerCase();
+      const matchSearch =
+        !q || i.name.toLowerCase().includes(q) || i.phone.toLowerCase().includes(q);
+      return matchStatus && matchSearch;
+    });
+  }, [items, filter, debouncedSearch]);
+
+  const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = visible.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   async function setStatus(id: string, status: "KONFIRMASI" | "SELESAI" | "BATAL") {
-    await updateAppointmentStatusAction(id, status);
-    router.refresh();
+    setPendingId(id);
+    try {
+      await updateAppointmentStatusAction(id, status);
+      router.refresh();
+    } finally {
+      setPendingId(null);
+    }
   }
+
+  const actionBtn =
+    "grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-taupe transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
     <div>
@@ -58,8 +86,11 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
           {TABS.map((tab) => (
             <button
               key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors ${
+              onClick={() => {
+                setFilter(tab.key);
+                setPage(1); // reset pagination on tab change
+              }}
+              className={`rounded-full border px-4 py-2.5 min-h-[44px] text-[13px] font-semibold transition-colors ${
                 filter === tab.key
                   ? "border-espresso bg-espresso text-white"
                   : "border-line bg-surface text-taupe hover:text-espresso"
@@ -75,7 +106,8 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Cari nama atau telefon..."
-          className="w-full rounded-[10px] border border-line bg-surface px-3 py-2 text-[13.5px] focus:outline-2 focus:outline-accent md:w-[240px]"
+          aria-label="Cari temujanji mengikut nama atau telefon"
+          className="w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 min-h-[44px] text-[13.5px] focus:outline-2 focus:outline-accent md:w-[240px]"
         />
       </div>
 
@@ -93,7 +125,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
             </tr>
           </thead>
           <tbody>
-            {visible.map((a) => (
+            {pageItems.map((a) => (
               <tr key={a.id}>
                 <td className="sticky-col whitespace-nowrap font-semibold">{a.name}</td>
                 <td className="whitespace-nowrap">{a.phone}</td>
@@ -112,14 +144,18 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
                         <button
                           onClick={() => setStatus(a.id, "KONFIRMASI")}
                           title="Konfirmasi"
-                          className="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface text-taupe hover:bg-ok-bg hover:text-ok"
+                          aria-label={`Konfirmasi temujanji ${a.name}`}
+                          disabled={pendingId === a.id}
+                          className={`${actionBtn} hover:bg-ok-bg hover:text-ok`}
                         >
                           <Check size={14} weight="bold" />
                         </button>
                         <button
                           onClick={() => setStatus(a.id, "BATAL")}
                           title="Batal"
-                          className="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface text-taupe hover:bg-bad-bg hover:text-bad"
+                          aria-label={`Batalkan temujanji ${a.name}`}
+                          disabled={pendingId === a.id}
+                          className={`${actionBtn} hover:bg-bad-bg hover:text-bad`}
                         >
                           <X size={14} weight="bold" />
                         </button>
@@ -130,18 +166,27 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
                         <button
                           onClick={() => setStatus(a.id, "SELESAI")}
                           title="Selesai"
-                          className="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface text-taupe hover:bg-ok-bg hover:text-ok"
+                          aria-label={`Tandakan selesai temujanji ${a.name}`}
+                          disabled={pendingId === a.id}
+                          className={`${actionBtn} hover:bg-ok-bg hover:text-ok`}
                         >
                           <CheckSquare size={14} weight="bold" />
                         </button>
                         <button
                           onClick={() => setStatus(a.id, "BATAL")}
                           title="Batal"
-                          className="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface text-taupe hover:bg-bad-bg hover:text-bad"
+                          aria-label={`Batalkan temujanji ${a.name}`}
+                          disabled={pendingId === a.id}
+                          className={`${actionBtn} hover:bg-bad-bg hover:text-bad`}
                         >
                           <X size={14} weight="bold" />
                         </button>
                       </>
+                    )}
+                    {pendingId === a.id && (
+                      <span className="ml-1 self-center font-mono text-[10px] uppercase tracking-wider text-taupe-faint">
+                        Memproses...
+                      </span>
                     )}
                   </div>
                 </td>
@@ -150,6 +195,36 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
           </tbody>
         </table>
       </div>
+
+      {visible.length > PAGE_SIZE && (
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-[13px] text-taupe">
+            Papar {(currentPage - 1) * PAGE_SIZE + 1}-
+            {Math.min(currentPage * PAGE_SIZE, visible.length)} daripada {visible.length}
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              aria-label="Halaman sebelumnya"
+              className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-taupe transition-colors hover:text-espresso disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <CaretLeft size={16} weight="bold" />
+            </button>
+            <span className="font-mono text-[12px] text-taupe px-1">
+              {currentPage}/{totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              aria-label="Halaman seterusnya"
+              className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-taupe transition-colors hover:text-espresso disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <CaretRight size={16} weight="bold" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {visible.length === 0 && (
         <p className="panel mt-4 p-6 text-center text-sm text-taupe">

@@ -95,29 +95,35 @@ export default function LandingPage() {
       />
 
       <SiteNav />
+      <a
+        href="#kandungan"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:text-sm focus:font-semibold"
+      >
+        Langkau ke kandungan
+      </a>
       <SmileArc />
 
-      <main className="relative z-10">
+      <main id="kandungan" className="relative z-10">
         {/* Hero */}
         <header className="grid md:grid-cols-2 min-h-[100dvh] pt-16">
-          <div className="flex flex-col justify-center px-5 md:px-16 pt-10 pb-6 md:py-20 bg-surface">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-soft rounded font-mono text-[11px] uppercase tracking-wider text-accent w-fit mb-8">
+          <div className="flex flex-col justify-center px-5 md:px-16 pt-6 pb-4 md:py-20 bg-surface">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-soft rounded font-mono text-[11px] uppercase tracking-wider text-accent w-fit mb-5 md:mb-8">
               Klinik Keluarga · Ipoh
             </span>
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight mb-6">
+            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4 md:mb-6">
               <HeroReveal text="Senyuman sihat" />{" "}
               <em className="not-italic text-accent relative inline-block">
                 <HeroReveal text="bermula di sini." />
                 <span className="absolute bottom-1 left-0 right-0 h-2 bg-accent-soft -z-10" />
               </em>
             </h1>
-            <p className="text-lg text-taupe max-w-md mb-10 leading-relaxed">
+            <p className="text-base md:text-lg text-taupe max-w-md mb-6 md:mb-10 leading-relaxed">
               Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3 md:gap-4">
               <Link
                 href="/booking"
-                className="inline-flex items-center gap-2 px-8 py-4 min-h-[52px] bg-accent text-white font-semibold rounded-lg hover:bg-accent-dark hover:-translate-y-0.5 hover:shadow-lg transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3.5 md:px-8 md:py-4 min-h-[48px] md:min-h-[52px] bg-accent text-white font-semibold rounded-lg hover:bg-accent-dark hover:-translate-y-0.5 hover:shadow-lg transition-all"
               >
                 Buat Temujanji →
               </Link>
@@ -125,7 +131,7 @@ export default function LandingPage() {
                 href="https://wa.me/60123456789"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 min-h-[52px] border border-line text-espresso font-semibold rounded-lg hover:border-accent hover:text-accent transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3.5 md:px-8 md:py-4 min-h-[48px] md:min-h-[52px] border border-line text-espresso font-semibold rounded-lg hover:border-accent hover:text-accent transition-colors"
               >
                 <WhatsappLogo size={20} weight="fill" />
                 WhatsApp
@@ -139,9 +145,6 @@ export default function LandingPage() {
         {/* Services */}
         <section id="rawatan" className="max-w-6xl mx-auto px-5 md:px-10 py-20 md:py-24 scroll-mt-20">
           <div className="text-center mb-14 md:mb-16">
-            <p className="font-mono text-[11px] uppercase tracking-widest text-taupe-faint mb-3">
-              Rawatan Kami
-            </p>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
               Perkhidmatan Pergigian Lengkap
             </h2>
@@ -168,7 +171,7 @@ export default function LandingPage() {
         </section>
 
         {/* Trust Strip */}
-        <section id="kenapa" className="bg-surface-2 border-y border-line py-12 md:py-14 scroll-mt-20">
+        <section id="kenapa" className="bg-surface-2 border-y border-line py-20 md:py-24 scroll-mt-20">
           <div className="max-w-6xl mx-auto px-5 md:px-10">
             <div className="mb-8 md:mb-10 text-center">
               <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
@@ -190,6 +193,7 @@ export default function LandingPage() {
             </div>
 
             {/* Stat band */}
+            {/* NOTE: Angka placeholder - pautkan ke data sebenar sebelum client handoff */}
             <div className="mt-12 grid grid-cols-3 gap-4 max-w-2xl mx-auto text-center">
               <div>
                 <p className="text-3xl md:text-4xl font-extrabold text-accent">
@@ -239,9 +243,6 @@ export default function LandingPage() {
             </div>
 
             <div className="order-1 md:order-2">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-accent mb-3">
-                Tentang Klinik
-              </p>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6">
                 Doktor yang anda kenal, bukan sekadar nama.
               </h2>
@@ -288,9 +289,6 @@ export default function LandingPage() {
         <section id="testimoni" className="bg-surface-2 border-y border-line py-20 md:py-24 scroll-mt-20">
           <div className="max-w-6xl mx-auto px-5 md:px-10">
             <div className="mb-12 md:mb-14">
-              <p className="font-mono text-[11px] uppercase tracking-widest text-accent mb-3">
-                Testimoni
-              </p>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
                 Apa Kata Pesakit
               </h2>
@@ -331,9 +329,6 @@ export default function LandingPage() {
         <section id="lokasi" className="max-w-6xl mx-auto px-5 md:px-10 py-20 md:py-24 scroll-mt-20">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-accent mb-3">
-                Lokasi & Waktu
-              </p>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6">
                 Jumpa kami di Ipoh.
               </h2>
@@ -394,7 +389,7 @@ export default function LandingPage() {
                   href="/booking"
                   className="inline-flex items-center gap-2 px-6 py-3.5 min-h-[48px] bg-accent text-white text-sm font-semibold rounded-lg hover:bg-accent-dark transition-colors"
                 >
-                  Buat Temujanji →
+                  Buat Temujanji
                 </Link>
               </div>
             </div>
@@ -425,7 +420,7 @@ export default function LandingPage() {
               href="/booking"
               className="inline-flex items-center gap-2 px-10 py-4 min-h-[52px] bg-accent text-white font-bold rounded-lg hover:bg-accent-dark hover:-translate-y-0.5 hover:shadow-lg transition-all"
             >
-              Buat Temujanji Sekarang →
+              Buat Temujanji →
             </Link>
           </div>
         </section>
@@ -483,7 +478,7 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto px-5 md:px-10 pt-8 border-t border-white/20 text-center text-sm text-white/50">
+        <div className="max-w-6xl mx-auto px-5 md:px-10 pt-8 border-t border-white/20 text-center text-sm text-white/70">
           © 2026 Klinik Citra. Hak cipta terpelihara.
         </div>
       </footer>

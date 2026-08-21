@@ -15,7 +15,7 @@ export default function BookingPage() {
     <main className="min-h-dvh">
       <nav className="mx-auto flex max-w-[640px] items-center px-5 py-5">
         <BrandMark compact />
-        <Link href="/" className="ml-auto text-sm font-semibold text-taupe hover:text-espresso">
+        <Link href="/" className="ml-auto inline-flex items-center px-3 min-h-[44px] text-sm font-semibold text-taupe hover:text-espresso">
           ← Kembali
         </Link>
       </nav>
