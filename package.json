@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "seed": "prisma db seed",
     "postinstall": "prisma generate"
   },
   "dependencies": {
