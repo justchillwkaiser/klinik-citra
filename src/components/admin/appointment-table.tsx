@@ -77,7 +77,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
   }
 
   const actionBtn =
-    "grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-taupe transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+    "grid h-11 w-11 place-items-center rounded-lg border border-border bg-surface text-text-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
     <div>
@@ -92,8 +92,8 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
               }}
               className={`rounded-full border px-4 py-2.5 min-h-[44px] text-[13px] font-semibold transition-colors ${
                 filter === tab.key
-                  ? "border-espresso bg-espresso text-white"
-                  : "border-line bg-surface text-taupe hover:text-espresso"
+                  ? "border-primary bg-primary text-white"
+                  : "border-border bg-surface text-text-muted hover:text-text"
               }`}
             >
               {tab.label}
@@ -107,7 +107,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Cari nama atau telefon..."
           aria-label="Cari temujanji mengikut nama atau telefon"
-          className="w-full rounded-[10px] border border-line bg-surface px-3 py-2.5 min-h-[44px] text-[13.5px] focus:outline-2 focus:outline-accent md:w-[240px]"
+          className="w-full rounded-[10px] border border-border bg-surface px-3 py-2.5 min-h-[44px] text-[13.5px] focus:outline-2 focus:outline-primary md:w-[240px]"
         />
       </div>
 
@@ -146,7 +146,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
                           title="Konfirmasi"
                           aria-label={`Konfirmasi temujanji ${a.name}`}
                           disabled={pendingId === a.id}
-                          className={`${actionBtn} hover:bg-ok-bg hover:text-ok`}
+                          className={`${actionBtn} hover:bg-success-soft hover:text-success`}
                         >
                           <Check size={14} weight="bold" />
                         </button>
@@ -168,7 +168,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
                           title="Selesai"
                           aria-label={`Tandakan selesai temujanji ${a.name}`}
                           disabled={pendingId === a.id}
-                          className={`${actionBtn} hover:bg-ok-bg hover:text-ok`}
+                          className={`${actionBtn} hover:bg-success-soft hover:text-success`}
                         >
                           <CheckSquare size={14} weight="bold" />
                         </button>
@@ -184,7 +184,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
                       </>
                     )}
                     {pendingId === a.id && (
-                      <span className="ml-1 self-center font-mono text-[10px] uppercase tracking-wider text-taupe-faint">
+                      <span className="ml-1 self-center font-mono text-[10px] uppercase tracking-wider text-text-muted">
                         Memproses...
                       </span>
                     )}
@@ -198,7 +198,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
 
       {visible.length > PAGE_SIZE && (
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-[13px] text-taupe">
+          <p className="text-[13px] text-text-muted">
             Papar {(currentPage - 1) * PAGE_SIZE + 1}-
             {Math.min(currentPage * PAGE_SIZE, visible.length)} daripada {visible.length}
           </p>
@@ -207,18 +207,18 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               aria-label="Halaman sebelumnya"
-              className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-taupe transition-colors hover:text-espresso disabled:opacity-40 disabled:cursor-not-allowed"
+              className="grid h-11 w-11 place-items-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:text-text disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <CaretLeft size={16} weight="bold" />
             </button>
-            <span className="font-mono text-[12px] text-taupe px-1">
+            <span className="font-mono text-[12px] text-text-muted px-1">
               {currentPage}/{totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               aria-label="Halaman seterusnya"
-              className="grid h-11 w-11 place-items-center rounded-lg border border-line bg-surface text-taupe transition-colors hover:text-espresso disabled:opacity-40 disabled:cursor-not-allowed"
+              className="grid h-11 w-11 place-items-center rounded-lg border border-border bg-surface text-text-muted transition-colors hover:text-text disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <CaretRight size={16} weight="bold" />
             </button>
@@ -227,7 +227,7 @@ export function AppointmentTable({ items }: { items: AppointmentRow[] }) {
       )}
 
       {visible.length === 0 && (
-        <p className="panel mt-4 p-6 text-center text-sm text-taupe">
+        <p className="panel mt-4 p-6 text-center text-sm text-text-muted">
           Tiada temujanji untuk penapis ini.
         </p>
       )}

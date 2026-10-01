@@ -1,36 +1,45 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------
+   Design tokens — source of truth: klinikcitra.pen variables
+   --------------------------------------------------------------- */
 @theme {
-  --color-cream: #faf8f5;
+  /* Colors */
+  --color-bg: #fafaf7;
   --color-surface: #ffffff;
-  --color-surface-2: #f0ebe4;
-  --color-espresso: #1a1a1a;
-  --color-taupe: #5a5a5a;
-  --color-taupe-faint: #6b6b6b;
-  --color-line: #e0d8cc;
-  --color-accent: #0d6e5f;
-  --color-accent-soft: #d4ebe5;
-  --color-accent-dark: #0a5a4e;
-  --color-accent-ink: #ffffff;
-  --color-ok: #3f6b58;
-  --color-ok-bg: #e2ece5;
-  --color-warn: #8a5f24;
-  --color-warn-bg: #f4e9d4;
+  --color-surface-soft: #f1f5f2;
+  --color-primary: #164a46;
+  --color-primary-hover: #103d3a;
+  --color-primary-soft: #e6efec;
+  --color-text: #17211f;
+  --color-text-muted: #65716e;
+  --color-border: #dde5e1;
+  --color-accent: #b9674a;
+  --color-accent-soft: #f7eae4;
+  --color-success: #3d806a;
+  --color-success-soft: #e4efe9;
+  --color-star: #d9a441;
+  --color-on-primary: #ffffff;
   --color-bad: #97493a;
   --color-bad-bg: #f4e2dc;
 
-  --radius-panel: 16px;
-  --radius-ctrl: 10px;
+  /* Radius (r-sm / r-md / r-lg / r-xl from the design) */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
 
+  /* Type */
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-playfair), Georgia, serif;
   --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
 
-  --shadow-soft: 0 12px 32px rgba(20, 45, 40, 0.08);
+  --shadow-soft: 0 12px 32px rgba(22, 74, 70, 0.08);
 }
 
 body {
   font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -40,14 +49,21 @@ html {
 
 /* Visible focus for keyboard users */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -58,42 +74,47 @@ html {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: var(--radius-ctrl);
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
-  padding: 10px 16px;
-  min-height: 44px;
-  transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+  padding: 13px 22px;
+  min-height: 48px;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
 }
 .btn:active {
   transform: scale(0.98);
 }
-.btn-primary {
-  background: var(--color-accent);
-  color: var(--color-accent-ink);
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
-.btn-primary:hover {
-  opacity: 0.92;
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
 }
 .btn-ghost {
-  background: transparent;
-  border-color: var(--color-line);
-  color: var(--color-espresso);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-primary);
 }
-.btn-ghost:hover {
-  background: var(--color-surface-2);
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--color-primary);
 }
 .btn-soft {
-  background: var(--color-surface-2);
-  color: var(--color-espresso);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
 }
-.btn-soft:hover {
-  background: #ddeae4;
+.btn-soft:hover:not(:disabled) {
+  background: #d8e7e2;
 }
 .btn-sm {
-  padding: 7px 12px;
+  padding: 9px 14px;
   font-size: 13px;
   min-height: 0;
 }
@@ -114,16 +135,16 @@ html {
   text-transform: uppercase;
 }
 .badge-baru {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
 }
 .badge-konfirmasi {
-  background: var(--color-ok-bg);
-  color: var(--color-ok);
+  background: var(--color-success-soft);
+  color: var(--color-success);
 }
 .badge-selesai {
-  background: var(--color-ok-bg);
-  color: var(--color-ok);
+  background: var(--color-success-soft);
+  color: var(--color-success);
 }
 .badge-batal {
   background: var(--color-bad-bg);
@@ -132,8 +153,8 @@ html {
 
 .panel {
   background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
 }
 
@@ -141,9 +162,11 @@ html {
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.12em;
-  color: var(--color-taupe-faint);
+  color: var(--color-text-muted);
   text-transform: uppercase;
 }
+
+/* ---------- Field / Input (per klinikcitra.pen component) ---------- */
 
 .field {
   display: flex;
@@ -151,23 +174,32 @@ html {
   gap: 6px;
 }
 .field label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 .field input,
 .field select {
-  padding: 11px 12px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-ctrl);
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   background: var(--color-surface);
   font-family: inherit;
-  font-size: 14px;
-  color: var(--color-espresso);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text);
   width: 100%;
+}
+.field input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
 }
 .field input:focus,
 .field select:focus {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-primary);
   outline-offset: 1px;
   border-color: transparent;
 }
@@ -176,8 +208,8 @@ html {
 
 .table-wrap {
   background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -192,21 +224,21 @@ html {
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-taupe-faint);
+  color: var(--color-text-muted);
   text-align: left;
   padding: 13px 16px;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-border);
 }
 .table-wrap td {
   padding: 13px 16px;
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-border);
   vertical-align: middle;
 }
 .table-wrap tbody tr:last-child td {
   border-bottom: none;
 }
 .table-wrap tbody tr:hover {
-  background: var(--color-surface-2);
+  background: var(--color-surface-soft);
 }
 
 /* Sticky first column (mobile horizontal scroll affordance) */
@@ -215,11 +247,11 @@ html {
   left: 0;
   z-index: 1;
   background: var(--color-surface);
-  border-right: 1px solid var(--color-line);
+  border-right: 1px solid var(--color-border);
 }
 .table-wrap thead .sticky-col {
   z-index: 2;
 }
 .table-wrap tbody tr:hover .sticky-col {
-  background: var(--color-surface-2);
+  background: var(--color-surface-soft);
 }

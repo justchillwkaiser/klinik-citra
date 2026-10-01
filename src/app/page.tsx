@@ -1,67 +1,224 @@
-import Link from "next/link";
-import Image from "next/image";
 import {
-  Star,
-  User,
-  ShieldCheck,
-  CurrencyCircleDollar,
-  Clock,
-  Sparkle,
-  Scissors,
-  CheckCircle,
-  Crown,
+  Search,
+  Sparkles,
   Sun,
-  Smiley,
+  Heart,
+  Plus,
+  AlignCenter,
+  Activity,
+  ShieldCheck,
+  Smile,
+  Check,
+  Clock,
+  MessageCircle,
   MapPin,
-  Phone,
-  Envelope,
-  WhatsappLogo,
-  GraduationCap,
-  Certificate,
-  Tooth,
-  NavigationArrow,
-} from "@phosphor-icons/react/dist/ssr";
+  Navigation,
+  ArrowRight,
+  type LucideIcon,
+} from "lucide-react";
+import { InstagramLogo, FacebookLogo } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
-import { HeroVisual } from "@/components/hero-visual";
-import { HeroReveal } from "@/components/hero-reveal";
-import { SmileArc } from "@/components/smile-arc";
-import { StatCount } from "@/components/stat-count";
+import { StickyCta } from "@/components/sticky-cta";
+import { EyebrowChip } from "@/components/eyebrow-chip";
+import { ButtonPrimary, ExternalButton } from "@/components/button";
+import { TreatmentCard } from "@/components/treatment-card";
+import { NeedCard } from "@/components/need-card";
+import { ReviewCard } from "@/components/review-card";
+import { StepItem } from "@/components/step-item";
+import { StatItem } from "@/components/stat-item";
+import { Stars } from "@/components/stars";
+import { ArtImage } from "@/components/art-image";
+import { MiniBookingForm } from "@/components/mini-booking-form";
 
-const SERVICES = [
-  { icon: Sparkle, name: "Pembersihan Gigi", desc: "Scaling dan polishing untuk kesihatan gusi dan gigi yang bersih.", price: "Dari RM 80" },
-  { icon: Scissors, name: "Cabutan Gigi", desc: "Cabutan selamat dan selesa, termasuk gigi bungsu bermasalah.", price: "Dari RM 60" },
-  { icon: CheckCircle, name: "Tampalan", desc: "Tampalan estetik warna gigi untuk gigi berlubang dan rosak.", price: "Dari RM 90" },
-  { icon: Crown, name: "Crown & Veneer", desc: "Pulihkan dan perbaiki bentuk gigi dengan crown dan veneer.", price: "Dari RM 350" },
-  { icon: Sun, name: "Whitening", desc: "Pemutihan gigi profesional untuk senyuman lebih cerah.", price: "Dari RM 250" },
-  { icon: Smiley, name: "Braces", desc: "Rawatan ortodontik untuk susunan gigi yang lebih kemas.", price: "Dari RM 2,500" },
+const WHATSAPP_URL = "https://wa.me/60125186720";
+const MAPS_URL = "https://www.google.com/maps/search/?api=1&query=Klinik+Citra+Ipoh+Perak";
+
+const IMG = {
+  /* Pre-cropped at source (fit=crop + target aspect) so next/image never ships
+     pixels the layout hides with object-cover. One photo per slot, all breakpoints. */
+  hero: "https://images.unsplash.com/photo-1745970347652-8f22f5d7d3ba?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=75&w=1200&h=900",
+  why: "https://images.unsplash.com/photo-1631217872822-1c2546d6b864?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=75&w=1080&h=900",
+  dentist:
+    "https://images.unsplash.com/photo-1733685372988-69a356984436?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=75&w=1000&h=1150",
+};
+
+const STATS: { value: string; label: string; shortLabel: string }[] = [
+  { value: "4.9★", label: "Purata penilaian Google", shortLabel: "Penilaian Google" },
+  { value: "12 tahun", label: "Melayani keluarga Ipoh", shortLabel: "Melayani Ipoh" },
+  { value: "18,000+", label: "Pesakit dirawat", shortLabel: "Pesakit dirawat" },
+  { value: "6 doktor", label: "Pasukan pergigian bertauliah", shortLabel: "Bertauliah" },
 ];
 
-const TRUST = [
-  { icon: User, text: "Doktor Berpengalaman 12 Tahun" },
-  { icon: ShieldCheck, text: "Peralatan Moden Digital" },
-  { icon: CurrencyCircleDollar, text: "Harga Telus Tanpa Tersembunyi" },
-  { icon: Clock, text: "Temujanji Dihormati" },
+const NEEDS: { icon: LucideIcon; title: string; desc: string; action: string }[] = [
+  {
+    icon: Activity,
+    title: "Gigi sakit?",
+    desc: "Pemeriksaan segera dengan pelan lega sakit pada hari yang sama.",
+    action: "Dapatkan bantuan →",
+  },
+  {
+    icon: Sparkles,
+    title: "Nak cuci gigi?",
+    desc: "Scaling, polishing dan nasihat penjagaan harian yang mudah.",
+    action: "Tempah cuci gigi →",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Gigi patah atau bengkak?",
+    desc: "Slot kecemasan diutamakan sepanjang waktu operasi kami.",
+    action: "Hubungi segera →",
+  },
+  {
+    icon: Smile,
+    title: "Anak takut doktor?",
+    desc: "Pendekatan lembut dan pemeriksaan mesra kanak-kanak.",
+    action: "Tempah untuk anak →",
+  },
 ];
 
-const TESTIMONIALS = [
+const TREATMENTS: {
+  icon: LucideIcon;
+  category: string;
+  title: string;
+  desc: string;
+  price: string;
+  hideOnMobile?: boolean;
+}[] = [
   {
-    quote: "Anak saya tak takut lagi ke klinik gigi. Doktor sangat sabar dan terangkan setiap langkah dengan jelas.",
-    name: "Nurul Izzah",
-    meta: "Ibu kepada 2 anak, Ipoh",
-    initials: "NI",
+    icon: Search,
+    category: "UMUM",
+    title: "Pemeriksaan & X-ray",
+    desc: "Pemeriksaan menyeluruh dengan X-ray digital resolusi tinggi.",
+    price: "Dari RM60 · 30 min",
   },
   {
-    quote: "Temujanji on time, harga pun sama macam yang diberitahu. Memang sesuai untuk keluarga.",
-    name: "Azman Khalid",
-    meta: "Pesakit tetap, Taiping",
-    initials: "AK",
+    icon: Sparkles,
+    category: "UMUM",
+    title: "Scaling & Polishing",
+    desc: "Buang karang gigi dan licinkan permukaan untuk nafas segar.",
+    price: "Dari RM80 · 45 min",
   },
   {
-    quote: "Scaling tak sakit langsung. Staff peramah dan klinik sangat bersih.",
-    name: "Priya Devi",
-    meta: "Pesakit scaling, Bercham",
-    initials: "PD",
+    icon: Sun,
+    category: "KOSMETIK",
+    title: "Pemutihan gigi",
+    desc: "Pemutihan profesional — hasil ketara dalam sekali sesi.",
+    price: "Dari RM450 · 60 min",
   },
+  {
+    icon: Heart,
+    category: "PEMULIHAN",
+    title: "Tampalan komposit",
+    desc: "Bina semula gigi rosak dengan tampalan sewarna gigi asli.",
+    price: "Dari RM120 · 45 min",
+    hideOnMobile: true,
+  },
+  {
+    icon: Plus,
+    category: "PEMULIHAN",
+    title: "Implan gigi",
+    desc: "Gantikan gigi hilang dengan implan titanium tahan lama.",
+    price: "Dari RM3,800 · 2 lawatan",
+  },
+  {
+    icon: AlignCenter,
+    category: "ORTHODONTIK",
+    title: "Braces & aligner",
+    desc: "Susun gigi secara berperingkat dengan pelan bulanan tetap.",
+    price: "Dari RM2,900 · 18 bulan",
+    hideOnMobile: true,
+  },
+];
+
+const WHY_POINTS: { title: string; desc: string }[] = [
+  {
+    title: "Terangkan dulu",
+    desc: "Anda tahu apa, kenapa dan berapa sebelum rawatan bermula.",
+  },
+  {
+    title: "Harga telus",
+    desc: "Anggaran bertulis diberikan sebelum apa-apa rawatan.",
+  },
+  {
+    title: "Slot fleksibel",
+    desc: "Waktu petang dan Sabtu untuk keluarga yang bekerja.",
+  },
+  {
+    title: "Rekod digital",
+    desc: "Sejarah rawatan anda tersimpan untuk lawatan akan datang.",
+  },
+];
+
+const STEPS: { number: string; title: string; desc: string }[] = [
+  {
+    number: "01",
+    title: "Tempah slot",
+    desc: "Pilih tarikh dan masa yang sesuai — ambil masa kurang satu minit.",
+  },
+  {
+    number: "02",
+    title: "Isi borang ringkas",
+    desc: "Sejarah kesihatan asas supaya doktor faham keadaan anda.",
+  },
+  {
+    number: "03",
+    title: "Konsultasi & X-ray",
+    desc: "Doktor periksa, ambil X-ray dan terangkan apa yang dilihat.",
+  },
+  {
+    number: "04",
+    title: "Pelan dan harga",
+    desc: "Anda terima pelan rawatan bertulis sebelum apa-apa bermula.",
+  },
+];
+
+const DOCTORS: { initials: string; name: string; role: string; shortRole: string }[] = [
+  {
+    initials: "FN",
+    name: "Dr. Farah Nadia",
+    role: "Pengasas · Doktor Pergigian Utama · 14 tahun",
+    shortRole: "Pengasas · Doktor Utama",
+  },
+  {
+    initials: "IH",
+    name: "Dr. Imran Hakim",
+    role: "Prosthodontik & implan gigi",
+    shortRole: "Prostodontik & implan",
+  },
+  {
+    initials: "ML",
+    name: "Dr. Mei Ling",
+    role: "Orthodontik & aligner",
+    shortRole: "Orthodontik & aligner",
+  },
+];
+
+const REVIEWS: { quote: string; initials: string; name: string; role: string }[] = [
+  {
+    quote: "Doktor terangkan setiap langkah, tak rasa dipaksa. Bilik pun bersih dan tenang.",
+    initials: "NA",
+    name: "Nurul Aisyah",
+    role: "Scaling & Polishing",
+  },
+  {
+    quote: "Anak saya yang takut klinik gigi sekarang minta datang sendiri. Terima kasih!",
+    initials: "HR",
+    name: "Hafiz Rahim",
+    role: "Rawatan kanak-kanak",
+  },
+  {
+    quote: "Harga disebut awal, tiada caj tersembunyi. Selesa dan cepat.",
+    initials: "TW",
+    name: "Tan Wei Ming",
+    role: "Tampalan komposit",
+  },
+];
+
+const HOURS: { day: string; time: string }[] = [
+  { day: "Isnin – Jumaat", time: "9:00 – 21:00" },
+  { day: "Sabtu", time: "9:00 – 18:00" },
+  { day: "Ahad", time: "10:00 – 16:00" },
 ];
 
 const jsonLd = {
@@ -69,22 +226,29 @@ const jsonLd = {
   "@type": "Dentist",
   name: "Klinik Citra",
   description:
-    "Klinik pergigian keluarga di Ipoh, Perak. Pembersihan gigi, cabutan, tampalan, whitening, braces.",
+    "Klinik pergigian keluarga di Ipoh, Perak. Rawatan gigi yang tenang, jelas dan mesra keluarga.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "No. 12, Jalan Dato Ahmad",
+    streetAddress: "No. 12, Jalan Bandar Timah",
     addressLocality: "Ipoh",
     addressRegion: "Perak",
     postalCode: "30000",
     addressCountry: "MY",
   },
-  telephone: "+60-5-255-8899",
-  openingHours: ["Mo-Fr 09:00-17:00", "Sa 09:00-13:00"],
-  priceRange: "RM 60 - RM 2,500",
+  telephone: "+60 5-255 8899",
+  openingHours: ["Mo-Fr 09:00-21:00", "Sa 09:00-18:00", "Su 10:00-16:00"],
+  priceRange: "RM 60 - RM 3,800",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    reviewCount: "1280",
+  },
 };
 
-const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=Klinik+Citra+Ipoh+Perak";
+const sectionShell = "mx-auto max-w-[1440px] px-5 py-10 md:px-10 md:py-12 xl:px-[120px] xl:py-[88px]";
+const h2Class =
+  "text-[27px] font-extrabold leading-[1.15] tracking-[-0.8px] text-text md:text-[32px] md:leading-[1.12] md:tracking-[-0.9px] xl:text-[40px] xl:tracking-[-1px]";
+const bodyClass = "text-[15px] font-medium leading-[1.6] text-text-muted md:text-[16px]";
 
 export default function LandingPage() {
   return (
@@ -97,391 +261,558 @@ export default function LandingPage() {
       <SiteNav />
       <a
         href="#kandungan"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:text-sm focus:font-semibold"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-[60] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-on-primary"
       >
         Langkau ke kandungan
       </a>
-      <SmileArc />
 
-      <main id="kandungan" className="relative z-10">
-        {/* Hero */}
-        <header className="grid md:grid-cols-2 min-h-[100dvh] pt-16">
-          <div className="flex flex-col justify-center px-5 md:px-16 pt-6 pb-4 md:py-20 bg-surface">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-soft rounded font-mono text-[11px] uppercase tracking-wider text-accent w-fit mb-5 md:mb-8">
-              Klinik Keluarga · Ipoh
-            </span>
-            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4 md:mb-6">
-              <HeroReveal text="Senyuman sihat" />{" "}
-              <em className="not-italic text-accent relative inline-block">
-                <HeroReveal text="bermula di sini." />
-                <span className="absolute bottom-1 left-0 right-0 h-2 bg-accent-soft -z-10" />
-              </em>
-            </h1>
-            <p className="text-base md:text-lg text-taupe max-w-md mb-6 md:mb-10 leading-relaxed">
-              Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati.
-            </p>
-            <div className="flex flex-wrap gap-3 md:gap-4">
-              <Link
-                href="/booking"
-                className="inline-flex items-center gap-2 px-6 py-3.5 md:px-8 md:py-4 min-h-[48px] md:min-h-[52px] bg-accent text-white font-semibold rounded-lg hover:bg-accent-dark hover:-translate-y-0.5 hover:shadow-lg transition-all"
-              >
-                Buat Temujanji →
-              </Link>
-              <a
-                href="https://wa.me/60123456789"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 md:px-8 md:py-4 min-h-[48px] md:min-h-[52px] border border-line text-espresso font-semibold rounded-lg hover:border-accent hover:text-accent transition-colors"
-              >
-                <WhatsappLogo size={20} weight="fill" />
-                WhatsApp
-              </a>
-            </div>
-          </div>
-
-          <HeroVisual />
-        </header>
-
-        {/* Services */}
-        <section id="rawatan" className="max-w-6xl mx-auto px-5 md:px-10 py-20 md:py-24 scroll-mt-20">
-          <div className="text-center mb-14 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-              Perkhidmatan Pergigian Lengkap
-            </h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.map((s) => {
-              const Icon = s.icon;
-              return (
-                <div
-                  key={s.name}
-                  className="group relative bg-surface border border-line rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
-                >
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                  <div className="w-14 h-14 bg-accent-soft rounded-xl grid place-items-center mb-6">
-                    <Icon size={28} className="text-accent" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-2">{s.name}</h3>
-                  <p className="text-sm text-taupe mb-5 leading-relaxed">{s.desc}</p>
-                  <span className="font-mono text-accent font-bold">{s.price}</span>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Trust Strip */}
-        <section id="kenapa" className="bg-surface-2 border-y border-line py-20 md:py-24 scroll-mt-20">
-          <div className="max-w-6xl mx-auto px-5 md:px-10">
-            <div className="mb-8 md:mb-10 text-center">
-              <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-                Kenapa Pesakit Pilih Klinik Citra
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {TRUST.map((t) => {
-                const Icon = t.icon;
-                return (
-                  <div key={t.text} className="flex items-center gap-4">
-                    <div className="w-11 h-11 shrink-0 bg-accent-soft rounded-xl grid place-items-center">
-                      <Icon size={24} className="text-accent" />
-                    </div>
-                    <span className="text-sm font-semibold">{t.text}</span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Stat band */}
-            {/* NOTE: Angka placeholder - pautkan ke data sebenar sebelum client handoff */}
-            <div className="mt-12 grid grid-cols-3 gap-4 max-w-2xl mx-auto text-center">
-              <div>
-                <p className="text-3xl md:text-4xl font-extrabold text-accent">
-                  <StatCount value={12} suffix="+" />
-                </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-taupe-faint">
-                  Tahun Pengalaman
-                </p>
-              </div>
-              <div>
-                <p className="text-3xl md:text-4xl font-extrabold text-accent">
-                  <StatCount value={5000} suffix="+" />
-                </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-taupe-faint">
-                  Pesakit Dilayan
-                </p>
-              </div>
-              <div>
-                <p className="text-3xl md:text-4xl font-extrabold text-accent">4.9</p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-taupe-faint">
-                  Rating Pesakit
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* About / Doktor */}
-        <section id="doktor" className="max-w-6xl mx-auto px-5 md:px-10 py-20 md:py-24 scroll-mt-20">
-          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            <div className="relative order-2 md:order-1">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-line">
-                <Image
-                  src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=900&auto=format&fit=crop&q=80"
-                  alt="Dr. Aminah binti Hassan, pengasas dan doktor pergigian Klinik Citra"
-                  fill
-                  sizes="(max-width: 768px) 92vw, 40vw"
-                  className="object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-5 -right-2 md:-right-5 bg-surface border border-line rounded-xl px-5 py-4 shadow-lg">
-                <p className="font-mono text-[10px] uppercase tracking-widest text-taupe-faint">
-                  Pengasas & Doktor Utama
-                </p>
-                <p className="mt-1 text-sm font-bold text-espresso">Dr. Aminah binti Hassan</p>
-              </div>
-            </div>
-
-            <div className="order-1 md:order-2">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6">
-                Doktor yang anda kenal, bukan sekadar nama.
-              </h2>
-              <p className="text-base md:text-lg text-taupe leading-relaxed mb-6">
-                Klinik Citra diasaskan oleh Dr. Aminah dengan satu prinsip mudah: setiap pesakit
-                dilayan macam keluarga sendiri. Sejak 12 tahun lalu, kami berkhidmat untuk
-                masyarakat Ipoh dengan rawatan yang jelas, harga yang telus, dan suasana klinik
-                yang selesa untuk kanak-kanak dan dewasa.
+      <main id="kandungan">
+        {/* 03 Hero */}
+        <section className="mx-auto max-w-[1440px] px-5 pb-9 pt-[30px] md:px-10 md:pb-14 md:pt-12 xl:px-[120px] xl:pb-[92px] xl:pt-[72px]">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-[1fr_auto] md:gap-x-10 md:gap-y-[26px] xl:gap-x-16">
+            <div className="flex flex-col gap-5 md:col-start-1 md:row-start-1 md:gap-[26px]">
+              <EyebrowChip>
+                <span className="hidden xl:inline">Pergigian Keluarga · Ipoh, Perak</span>
+                <span className="xl:hidden">Pergigian Keluarga · Ipoh</span>
+              </EyebrowChip>
+              <h1 className="text-[34px] font-extrabold leading-[1.1] tracking-[-1.1px] text-text md:text-[40px] md:leading-[1.08] md:tracking-[-1.2px] xl:text-[58px] xl:leading-[1.06] xl:tracking-[-1.6px]">
+                <span className="hidden xl:inline">
+                  Rawatan gigi yang tenang, jelas dan mesra keluarga.
+                </span>
+                <span className="xl:hidden">Rawatan gigi yang tenang dan mesra keluarga.</span>
+              </h1>
+              <p className={bodyClass}>
+                <span className="hidden xl:inline">
+                  Dari pemeriksaan rutin hingga implan — kami terangkan setiap langkah sebelum
+                  mula, dan setiap harga sebelum anda setuju.
+                </span>
+                <span className="xl:hidden">
+                  Kami terangkan setiap langkah dan setiap harga sebelum rawatan mula.
+                </span>
               </p>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-3">
-                  <GraduationCap size={22} className="text-accent shrink-0 mt-0.5" />
-                  <span className="text-sm leading-relaxed">
-                    <b>DDS (Doctor of Dental Surgery)</b>, berdaftar dengan Malaysian Dental Council
+            </div>
+
+            {/* Hero Image */}
+            <div className="relative h-[250px] w-full overflow-hidden rounded-xl border border-border md:col-start-2 md:row-span-2 md:row-start-1 md:h-[340px] md:w-[360px] xl:h-[530px] xl:w-[600px]">
+              <ArtImage
+                alt="Ruang sambutan Klinik Citra yang cerah dan selesa"
+                src={IMG.hero}
+                priority
+                sizes="(max-width: 768px) 92vw, 600px"
+                className="object-cover"
+              />
+              {/* Open Badge */}
+              <div className="absolute right-5 top-5 flex items-center gap-[7px] rounded-full bg-success px-[13px] py-[7px] md:hidden xl:flex">
+                <span aria-hidden="true" className="h-[7px] w-[7px] rounded-full bg-on-primary" />
+                <span className="text-[11px] font-bold text-on-primary xl:text-[12px]">
+                  <span className="xl:hidden">Sedang buka · sehingga 9 malam</span>
+                  <span className="hidden xl:inline">Sedang buka</span>
+                </span>
+              </div>
+              {/* Open Card */}
+              <div className="absolute bottom-[56px] left-[28px] hidden w-[300px] items-center gap-3 rounded-lg bg-surface p-[18px] xl:flex">
+                <Clock size={22} className="shrink-0 text-primary" aria-hidden="true" />
+                <div className="flex flex-col gap-px">
+                  <span className="text-[15px] font-extrabold text-text">Buka hari ini</span>
+                  <span className="text-[13px] font-medium text-text-muted">
+                    9:00 pagi – 9:00 malam
                   </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Certificate size={22} className="text-accent shrink-0 mt-0.5" />
-                  <span className="text-sm leading-relaxed">
-                    Klinik berdaftar Kementerian Kesihatan Malaysia
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Tooth size={22} className="text-accent shrink-0 mt-0.5" />
-                  <span className="text-sm leading-relaxed">
-                    Kepakaran dalam pergigian keluarga dan pergigian estetik
-                  </span>
-                </li>
-              </ul>
-              <blockquote className="mt-8 border-l-4 border-accent pl-5 py-1">
-                <p className="text-base italic text-espresso leading-relaxed">
-                  &ldquo;Kami komited untuk memberikan rawatan pergigian terbaik dengan harga yang
-                  telus dan perkhidmatan yang mesra.&rdquo;
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-5 md:col-start-1 md:row-start-2 md:gap-[26px]">
+              <div className="flex flex-col gap-2.5 xl:flex-row xl:items-center xl:gap-3">
+                <ButtonPrimary href="/booking">
+                  Tempah temujanji
+                </ButtonPrimary>
+                <ExternalButton
+                  href={WHATSAPP_URL}
+                  variant="secondary"
+                  icon={<MessageCircle size={18} className="text-primary" aria-hidden="true" />}
+                >
+                  WhatsApp kami
+                </ExternalButton>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Stars size={15} />
+                <p className="text-[13px] font-semibold text-text-muted xl:text-[14px]">
+                  <span className="hidden xl:inline">4.9 daripada 1,280 ulasan pesakit</span>
+                  <span className="xl:hidden">4.9 · 1,280 ulasan pesakit</span>
                 </p>
-                <footer className="mt-2 font-mono text-[11px] uppercase tracking-widest text-taupe-faint">
-                  Dr. Aminah binti Hassan, Pengasas Klinik Citra
-                </footer>
-              </blockquote>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section id="testimoni" className="bg-surface-2 border-y border-line py-20 md:py-24 scroll-mt-20">
-          <div className="max-w-6xl mx-auto px-5 md:px-10">
-            <div className="mb-12 md:mb-14">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
-                Apa Kata Pesakit
-              </h2>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-              {TESTIMONIALS.map((t) => (
-                <div
-                  key={t.name}
-                  className="relative bg-surface border border-line rounded-2xl p-8"
-                >
-                  <span className="absolute top-5 left-6 font-serif text-5xl text-accent-soft leading-none">
-                    &ldquo;
-                  </span>
-                  <p className="relative text-base leading-relaxed italic mb-6 pl-8">
-                    {t.quote}
-                  </p>
-                  <div className="flex items-center gap-3 pl-8">
-                    <div className="w-10 h-10 bg-accent-soft rounded-full grid place-items-center text-sm font-bold text-accent">
-                      {t.initials}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold">{t.name}</p>
-                      <p className="text-xs text-taupe-faint">{t.meta}</p>
-                    </div>
-                  </div>
-                  <div className="absolute top-6 right-6 flex gap-0.5 text-accent">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} size={13} weight="fill" />
-                    ))}
-                  </div>
+        {/* 04 Stats */}
+        <section className="border-y border-border bg-surface-soft">
+          <div className="mx-auto flex max-w-[1440px] flex-col gap-[18px] px-5 py-[22px] md:px-10 md:py-[26px] xl:px-[120px] xl:py-[34px]">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-[18px] md:flex md:items-center md:justify-between md:gap-4">
+              {STATS.map((s, i) => (
+                <div key={s.label} className="contents">
+                  <StatItem value={s.value} label={s.label} shortLabel={s.shortLabel} />
+                  {i < STATS.length - 1 && (
+                    <span aria-hidden="true" className="hidden h-12 w-px bg-border xl:block" />
+                  )}
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Lokasi & Waktu Operasi */}
-        <section id="lokasi" className="max-w-6xl mx-auto px-5 md:px-10 py-20 md:py-24 scroll-mt-20">
-          <div className="grid md:grid-cols-2 gap-10 md:gap-16">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6">
-                Jumpa kami di Ipoh.
+        {/* 05 Quick Needs */}
+        <section id="keperluan" className={sectionShell}>
+          <div className="flex flex-col gap-6 md:gap-7 xl:gap-10">
+            <div className="flex flex-col gap-3 md:gap-4">
+              <EyebrowChip>Bantuan Pantas</EyebrowChip>
+              <h2 className={h2Class}>
+                <span className="hidden md:inline">Pilih mengikut apa yang anda rasa hari ini.</span>
+                <span className="md:hidden">Apa yang anda perlu hari ini?</span>
               </h2>
-              <p className="text-base text-taupe leading-relaxed mb-8 max-w-md">
-                Klinik kami mudah diakses dengan tempat letak kereta berhampiran. Datang terus,
-                atau tempah slot lebih awal supaya anda tidak perlu menunggu lama.
+              <p className={`${bodyClass} hidden xl:block`}>
+                Kami susun rawatan di sekeliling keperluan anda — bukan sebaliknya.
               </p>
-
-              <div className="space-y-5">
-                <div className="flex items-start gap-3">
-                  <MapPin size={22} className="text-accent shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-bold">Alamat</p>
-                    <p className="text-sm text-taupe leading-relaxed">
-                      No. 12, Jalan Dato Ahmad, 30000 Ipoh, Perak
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Clock size={22} className="text-accent shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-bold">Waktu Operasi</p>
-                    <p className="text-sm text-taupe">Isnin - Jumaat: 9:00 pagi - 5:00 petang</p>
-                    <p className="text-sm text-taupe">Sabtu: 9:00 pagi - 1:00 petang</p>
-                    <p className="text-sm text-taupe">Ahad: Tutup</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Phone size={22} className="text-accent shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-bold">Hubungi</p>
-                    <a href="tel:+6052558899" className="block text-sm text-taupe hover:text-accent py-3 -my-1.5">
-                      05-255 8899
-                    </a>
-                    <a
-                      href="https://wa.me/60123456789"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block text-sm text-taupe hover:text-accent py-3 -my-1.5"
-                    >
-                      012-345 6789 (WhatsApp)
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={MAPS_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 min-h-[48px] border border-line text-espresso text-sm font-semibold rounded-lg hover:border-accent hover:text-accent transition-colors"
-                >
-                  <NavigationArrow size={18} />
-                  Buka Google Maps
-                </a>
-                <Link
-                  href="/booking"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 min-h-[48px] bg-accent text-white text-sm font-semibold rounded-lg hover:bg-accent-dark transition-colors"
-                >
-                  Buat Temujanji
-                </Link>
-              </div>
             </div>
-
-            <div className="relative overflow-hidden rounded-2xl border border-line bg-surface-2 min-h-[320px]">
-              <iframe
-                title="Peta lokasi Klinik Citra, Ipoh"
-                src="https://www.google.com/maps?q=Ipoh%2C%20Perak%2C%20Malaysia&output=embed"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 h-full w-full border-0"
-                allowFullScreen
-              />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-4">
+              {NEEDS.map((n) => (
+                <NeedCard key={n.title} {...n} />
+              ))}
             </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="bg-surface border-t border-line py-20 md:py-24">
-          <div className="max-w-xl mx-auto text-center px-5 md:px-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
-              Sedia Untuk Senyuman Lebih Sihat?
-            </h2>
-            <p className="text-lg text-taupe mb-8">
-              Tempah slot rawatan anda sekarang. Pengesahan segera melalui WhatsApp.
-            </p>
-            <Link
-              href="/booking"
-              className="inline-flex items-center gap-2 px-10 py-4 min-h-[52px] bg-accent text-white font-bold rounded-lg hover:bg-accent-dark hover:-translate-y-0.5 hover:shadow-lg transition-all"
+        {/* 06 Treatments */}
+        <section id="rawatan" className={`${sectionShell} scroll-mt-20`}>
+          <div className="flex flex-col gap-6 md:gap-7 xl:gap-10">
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between md:gap-10">
+              <div className="flex flex-col gap-3 md:gap-4">
+                <EyebrowChip>Rawatan</EyebrowChip>
+                <h2 className={h2Class}>Rawatan lengkap di bawah satu bumbung.</h2>
+                <p className={`${bodyClass} hidden xl:block`}>
+                  Daripada pemeriksaan rutin sehingga pemulihan lanjutan, semuanya dijelaskan
+                  dengan harga sebelum mula.
+                </p>
+              </div>
+              <span id="harga" className="scroll-mt-20" aria-hidden="true" />
+              <a
+                href="#harga"
+                className="hidden shrink-0 text-[15px] font-bold text-primary hover:underline xl:block"
+              >
+                Lihat semua rawatan →
+              </a>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-3">
+              {TREATMENTS.map((t) => (
+                <div key={t.title} className={t.hideOnMobile ? "hidden md:flex" : "flex"}>
+                  <TreatmentCard
+                    icon={t.icon}
+                    category={t.category}
+                    title={t.title}
+                    desc={t.desc}
+                    price={t.price}
+                  />
+                </div>
+              ))}
+            </div>
+            <a
+              href="#harga"
+              className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-md border border-border bg-surface px-[22px] py-[14px] text-[16px] font-bold text-primary hover:border-primary md:hidden"
             >
-              Buat Temujanji →
-            </Link>
+              <ArrowRight size={18} aria-hidden="true" />
+              Lihat semua rawatan
+            </a>
+          </div>
+        </section>
+
+        {/* 07 Why Citra */}
+        <section id="tentang" className={`${sectionShell} scroll-mt-20 border-y border-border bg-surface-soft`}>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-x-10 md:gap-y-6 xl:gap-x-16">
+            <div className="flex flex-col gap-5 md:col-start-2 md:row-start-1 xl:gap-6">
+              <EyebrowChip>Kenapa Klinik Citra</EyebrowChip>
+              <h2 className={h2Class}>Kami utamakan kejelasan sebelum rawatan.</h2>
+              <p className={bodyClass}>
+                Ramai orang takut ke klinik gigi kerana tidak tahu apa yang akan berlaku. Kami ubah
+                itu — anda sentiasa tahu langkah seterusnya.
+              </p>
+            </div>
+            <div className="relative h-[220px] w-full overflow-hidden rounded-lg border border-border md:col-start-1 md:row-span-2 md:row-start-1 md:h-[380px] xl:h-[480px] xl:w-[540px] xl:rounded-xl">
+              <ArtImage
+                alt="Ruang rawatan Klinik Citra yang bersih dan tenang"
+                src={IMG.why}
+                sizes="(max-width: 768px) 92vw, 540px"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex flex-col gap-5 md:col-start-2 md:row-start-2 md:grid md:grid-cols-2 md:gap-x-7 md:gap-y-6">
+              {WHY_POINTS.map((p) => (
+                <div key={p.title} className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="grid h-6 w-6 place-items-center rounded-full bg-primary-soft">
+                      <Check size={14} className="text-primary" aria-hidden="true" />
+                    </span>
+                    <h3 className="text-[16px] font-extrabold text-text">{p.title}</h3>
+                  </div>
+                  <p className="text-[14px] leading-[1.5] text-text-muted">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 08 First Visit */}
+        <section id="lawatan" className={sectionShell}>
+          <div className="flex flex-col gap-6 md:gap-8 xl:gap-12">
+            <div className="flex flex-col items-center gap-3 md:gap-4">
+              <EyebrowChip>Lawatan Pertama</EyebrowChip>
+              <h2 className={`${h2Class} max-w-[760px] text-center`}>Empat langkah, tiada kejutan.</h2>
+              <p className={`${bodyClass} hidden max-w-[640px] text-center xl:block`}>
+                Kami rancang setiap lawatan supaya anda tahu apa yang berlaku dari mula hingga akhir.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-[22px] md:grid-cols-2 md:gap-7 xl:grid-cols-4">
+              {STEPS.map((s) => (
+                <StepItem key={s.number} {...s} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 09 Dentist */}
+        <section id="doktor" className={`${sectionShell} scroll-mt-20 xl:bg-surface-soft`}>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-10 xl:items-center xl:gap-16">
+            <div className="relative h-[280px] w-full overflow-hidden rounded-xl border border-border md:h-[420px] xl:h-[560px] xl:w-[480px]">
+              <ArtImage
+                alt="Dr. Farah Nadia, pengasas Klinik Citra"
+                src={IMG.dentist}
+                sizes="(max-width: 768px) 92vw, 480px"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex flex-col gap-5 xl:gap-6">
+              <EyebrowChip>Pasukan Pergigian</EyebrowChip>
+              <h2 className={h2Class}>Doktor yang anda kenal, bukan orang asing.</h2>
+              <p className={bodyClass}>
+                Setiap doktor di Klinik Citra dilatih untuk mendengar dahulu. Anda akan berjumpa
+                doktor yang sama pada setiap lawatan supaya rawatan anda berterusan.
+              </p>
+              <div className="flex flex-col">
+                {DOCTORS.map((d) => (
+                  <div
+                    key={d.name}
+                    className="flex items-center gap-3 border-b border-border py-[13px] xl:gap-3.5 xl:py-[15px]"
+                  >
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-primary-soft text-[15px] font-extrabold text-primary xl:h-[46px] xl:w-[46px]">
+                      {d.initials}
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-px">
+                      <span className="text-[15px] font-extrabold text-text xl:text-[16px]">
+                        {d.name}
+                      </span>
+                      <span className="text-[13px] font-medium text-text-muted xl:text-[14px]">
+                        <span className="hidden xl:inline">{d.role}</span>
+                        <span className="xl:hidden">{d.shortRole}</span>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <ExternalButton
+                href={WHATSAPP_URL}
+                variant="secondary"
+                className="self-start"
+                icon={<ArrowRight size={18} className="text-primary" aria-hidden="true" />}
+              >
+                Kenali pasukan kami
+              </ExternalButton>
+            </div>
+          </div>
+        </section>
+
+        {/* 10 Reviews */}
+        <section id="ulasan" className={`${sectionShell} border-y border-border bg-surface-soft xl:border-0 xl:bg-transparent`}>
+          <div className="flex flex-col gap-6 md:gap-8 xl:gap-12">
+            <div className="flex flex-col items-center gap-3 md:gap-4">
+              <EyebrowChip>Ulasan Pesakit</EyebrowChip>
+              <h2 className={`${h2Class} max-w-[760px] text-center`}>1,280 ulasan, purata 4.9.</h2>
+              <p className={`${bodyClass} hidden max-w-[640px] text-center xl:block`}>
+                Kepercayaan pesakit dari seluruh Ipoh dan Perak — kami jaga seperti keluarga.
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-3 md:hidden xl:flex">
+              <span className="text-[38px] font-extrabold tracking-[-1.2px] text-text xl:text-[44px] xl:tracking-[-1.5px]">
+                4.9
+              </span>
+              <Stars size={18} />
+              <span className="hidden text-[15px] font-semibold text-text-muted xl:inline">
+                daripada 1,280 ulasan Google
+              </span>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+              {REVIEWS.map((r) => (
+                <ReviewCard key={r.name} {...r} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 11 Location */}
+        <section id="lokasi" className={`${sectionShell} scroll-mt-20 xl:bg-surface-soft`}>
+          <div className="grid grid-cols-1 gap-[18px] md:grid-cols-2 md:gap-x-10 md:gap-y-5 xl:gap-x-16">
+            <div className="flex flex-col gap-[18px] md:col-start-1 md:row-start-1 xl:gap-[22px]">
+              <EyebrowChip>
+                <span className="hidden xl:inline">Lokasi & Waktu Operasi</span>
+                <span className="xl:hidden">Lokasi & Waktu</span>
+              </EyebrowChip>
+              <h2 className={h2Class}>Datang ke Klinik Citra di Ipoh.</h2>
+              <p className={bodyClass}>
+                No. 12, Jalan Bandar Timah, 30000 Ipoh, Perak.
+              </p>
+            </div>
+
+            <div className="relative h-[220px] w-full overflow-hidden rounded-xl border border-border md:col-start-2 md:row-span-3 md:row-start-1 md:h-[380px] xl:h-[460px] xl:w-[560px]">
+              <iframe
+                title="Peta lokasi Klinik Citra di Ipoh, Perak"
+                src="https://www.google.com/maps?q=No.+12,+Jalan+Bandar+Timah,+30000+Ipoh,+Perak&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 h-full w-full border-0"
+              />
+              <div className="pointer-events-none absolute bottom-4 left-4 flex w-[300px] items-center gap-3 rounded-md bg-surface p-[14px] shadow-soft xl:bottom-6 xl:left-6 xl:w-[360px] xl:gap-3 xl:rounded-lg xl:p-[18px]">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary xl:h-10 xl:w-10">
+                  <MapPin size={18} className="text-on-primary xl:size-5" aria-hidden="true" />
+                </span>
+                <div className="flex min-w-0 flex-col gap-px">
+                  <span className="text-[14px] font-extrabold text-text xl:text-[15px]">
+                    Klinik Citra Ipoh
+                  </span>
+                  <span className="text-[12px] font-medium text-text-muted xl:text-[13px]">
+                    <span className="hidden xl:inline">5 minit dari Ipoh Parade · Berhampiran Medan Kidd</span>
+                    <span className="xl:hidden">5 minit dari Ipoh Parade</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-border bg-surface px-[18px] py-1.5 md:col-start-1 md:row-start-2 xl:w-[440px] xl:px-[22px] xl:py-2">
+              {HOURS.map((h) => (
+                <div
+                  key={h.day}
+                  className="flex items-center justify-between border-b border-border py-[13px] last:border-b-0 xl:py-[14px]"
+                >
+                  <span className="text-[14px] font-semibold text-text xl:text-[15px]">{h.day}</span>
+                  <span className="text-[14px] font-extrabold text-primary xl:text-[15px]">
+                    {h.time}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col gap-3 md:col-start-1 md:row-start-3 xl:flex-row xl:items-center">
+              <ExternalButton
+                href={MAPS_URL}
+                variant="primary"
+                icon={<Navigation size={18} aria-hidden="true" />}
+              >
+                Dapatkan arah
+              </ExternalButton>
+              <ExternalButton
+                href={WHATSAPP_URL}
+                variant="secondary"
+                icon={<MessageCircle size={18} className="text-primary" aria-hidden="true" />}
+              >
+                WhatsApp kami
+              </ExternalButton>
+            </div>
+            <p className="text-[13px] font-medium text-text-muted md:col-start-1 md:row-start-4">
+              Parking percuma di hadapan klinik · Akses kerusi roda tersedia.
+            </p>
+          </div>
+        </section>
+
+        {/* 12 Booking */}
+        <section className="mx-auto max-w-[1440px] px-5 pb-10 md:px-10 md:pb-12 xl:px-[120px] xl:pb-[120px]">
+          <div className="flex flex-col gap-6 rounded-xl bg-primary p-6 md:gap-8 md:p-10 xl:flex-row xl:items-center xl:gap-14 xl:p-14">
+            <div className="flex flex-col gap-5 xl:gap-5">
+              <span className="inline-flex w-fit items-center justify-center rounded-full bg-white/[0.12] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[1.1px] text-on-primary xl:text-[12px] xl:tracking-[1.2px]">
+                Tempah dalam 1 minit
+              </span>
+              <h2 className="text-[27px] font-extrabold leading-[1.15] tracking-[-0.8px] text-on-primary xl:text-[40px] xl:leading-[1.12] xl:tracking-[-1px]">
+                Sedia untuk mulakan rawatan anda?
+              </h2>
+              <p className="text-[15px] font-medium leading-[1.6] text-white/70 xl:text-[17px]">
+                <span className="hidden xl:inline">
+                  Pilih slot yang sesuai dan kami akan mengesahkannya melalui WhatsApp dalam masa
+                  satu jam bekerja.
+                </span>
+                <span className="xl:hidden">
+                  Kami akan mengesahkan slot anda melalui WhatsApp dalam masa satu jam bekerja.
+                </span>
+              </p>
+              <div className="hidden items-center gap-[22px] xl:flex">
+                {["Tiada bayaran pendahuluan", "Batal bebas sebelum 24 jam", "Slot petang & Sabtu"].map(
+                  (p) => (
+                    <span key={p} className="flex items-center gap-2">
+                      <Check size={16} className="text-white/80" aria-hidden="true" />
+                      <span className="text-[14px] font-semibold text-white/80">{p}</span>
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+            <MiniBookingForm />
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-espresso text-white py-16 relative z-10">
-        <div className="max-w-6xl mx-auto px-5 md:px-10 grid md:grid-cols-4 gap-10 mb-10">
-          <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold mb-4">Klinik Citra</h3>
-            <p className="text-white/70 text-sm leading-relaxed max-w-sm">
-              Klinik pergigian keluarga yang komited untuk memberikan rawatan berkualiti dengan
-              harga telus dan perkhidmatan mesra.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-sm font-bold uppercase tracking-wider mb-4">Hubungi</h4>
-            <div className="space-y-2 text-sm text-white/70">
-              <p className="flex items-center gap-2">
-                <Phone size={16} />
-                <a href="tel:+6052558899" className="hover:text-white inline-flex items-center min-h-[44px] py-2">05-255 8899</a>
+      {/* 13 Footer */}
+      <footer className="bg-text text-on-primary">
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-[26px] px-5 py-9 md:gap-10 md:px-10 md:py-16 xl:px-[120px]">
+          <div className="flex flex-col gap-10 xl:flex-row xl:gap-14">
+            <div className="flex flex-col gap-[14px] xl:w-[340px] xl:gap-[18px]">
+              <div className="flex items-center gap-2.5 xl:gap-3">
+                <span
+                  className="grid h-[34px] w-[34px] place-items-center rounded-[10px] bg-on-primary text-[17px] font-extrabold text-text xl:h-[38px] xl:w-[38px] xl:rounded-[11px] xl:text-[19px]"
+                  aria-hidden="true"
+                >
+                  C
+                </span>
+                <span className="text-[18px] font-extrabold tracking-[-0.4px] xl:text-[20px]">
+                  Klinik Citra
+                </span>
+              </div>
+              <p className="text-[14px] font-medium leading-[1.6] text-white/60 xl:text-[15px]">
+                <span className="hidden xl:inline">
+                  Klinik pergigian keluarga di Ipoh. Rawatan jelas, harga telus, dan doktor yang
+                  anda kenal.
+                </span>
+                <span className="xl:hidden">
+                  Klinik pergigian keluarga di Ipoh. Rawatan jelas, harga telus.
+                </span>
               </p>
-              <p className="flex items-center gap-2">
-                <Envelope size={16} />
-                <a href="mailto:hello@klinikcitra.my" className="hover:text-white inline-flex items-center min-h-[44px] py-2">
-                  hello@klinikcitra.my
-                </a>
-              </p>
-              <p className="flex items-center gap-2">
-                <WhatsappLogo size={16} />
+              <div className="flex items-center gap-2.5">
                 <a
-                  href="https://wa.me/60123456789"
+                  href="https://www.instagram.com/klinikcitra.ipoh/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-white inline-flex items-center min-h-[44px] py-2"
+                  aria-label="Instagram Klinik Citra"
+                  className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-white/[0.08] text-white/80 hover:text-white xl:h-10 xl:w-10"
                 >
-                  012-345 6789
+                  <InstagramLogo size={18} />
                 </a>
-              </p>
+                <a
+                  href="https://www.facebook.com/klinikcitra.ipoh"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook Klinik Citra"
+                  className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-white/[0.08] text-white/80 hover:text-white xl:h-10 xl:w-10"
+                >
+                  <FacebookLogo size={18} />
+                </a>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp Klinik Citra"
+                  className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-white/[0.08] text-white/80 hover:text-white md:hidden"
+                >
+                  <MessageCircle size={17} />
+                </a>
+              </div>
+            </div>
+
+            <div className="grid flex-1 grid-cols-2 gap-6 md:grid-cols-3 md:gap-8 xl:gap-14">
+              <div className="flex min-w-0 flex-col gap-3">
+                <h3 className="text-[13px] font-bold tracking-[0.4px] xl:text-[14px]">Rawatan</h3>
+                <div className="flex flex-col gap-3">
+                  <a href="#rawatan" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Pemeriksaan & X-ray
+                  </a>
+                  <a href="#rawatan" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Scaling & polishing
+                  </a>
+                  <a href="#rawatan" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Pemutihan gigi
+                  </a>
+                  <a href="#rawatan" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Implan gigi
+                  </a>
+                  <a href="#rawatan" className="hidden text-[14px] font-medium text-white/60 hover:text-white md:block">
+                    Braces & aligner
+                  </a>
+                </div>
+              </div>
+              <div className="flex min-w-0 flex-col gap-3">
+                <h3 className="text-[13px] font-bold tracking-[0.4px] xl:text-[14px]">Klinik</h3>
+                <div className="flex flex-col gap-3">
+                  <a href="#tentang" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Tentang kami
+                  </a>
+                  <a href="#doktor" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Doktor kami
+                  </a>
+                  <a href="#harga" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    Harga & pakej
+                  </a>
+                  <span className="hidden text-[14px] font-medium text-white/60 md:block">Blog kesihatan</span>
+                  <span className="hidden text-[14px] font-medium text-white/60 md:block">Kerjaya</span>
+                  <a href="#lokasi" className="text-[13px] font-medium text-white/60 hover:text-white md:hidden">
+                    Hubungi
+                  </a>
+                </div>
+              </div>
+              <div className="hidden min-w-0 flex-col gap-3 md:flex">
+                <h3 className="text-[13px] font-bold tracking-[0.4px] xl:text-[14px]">Hubungi</h3>
+                <div className="flex flex-col gap-3">
+                  <span className="text-[13px] font-medium text-white/60 xl:text-[14px]">
+                    No. 12, Jalan Bandar Timah, Ipoh
+                  </span>
+                  <a href="tel:+6052558899" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    +60 5-255 8899
+                  </a>
+                  <a href="mailto:hello@klinikcitra.my" className="text-[13px] font-medium text-white/60 hover:text-white xl:text-[14px]">
+                    hello@klinikcitra.my
+                  </a>
+                  <span className="text-[13px] font-medium text-white/60 xl:text-[14px]">
+                    Isnin–Jumaat 9:00–21:00
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-          <div>
-            <h4 className="text-sm font-bold uppercase tracking-wider mb-4">Lokasi</h4>
-            <div className="space-y-2 text-sm text-white/70">
-              <p className="flex items-start gap-2">
-                <MapPin size={16} className="mt-0.5 shrink-0" />
-                No. 12, Jalan Dato Ahmad, 30000 Ipoh, Perak
-              </p>
-            </div>
-            <h4 className="text-sm font-bold uppercase tracking-wider mt-6 mb-4">Waktu Operasi</h4>
-            <div className="space-y-1 text-sm text-white/70">
-              <p>Isnin - Jumaat: 9:00 - 17:00</p>
-              <p>Sabtu: 9:00 - 13:00</p>
-              <p>Ahad: Tutup</p>
+
+          <div className="h-px w-full bg-white/10" />
+
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <p className="text-[12px] font-medium text-white/50 md:text-[13px]">
+              © 2026 Klinik Citra Sdn Bhd.
+              <span className="hidden md:inline"> Hak cipta terpelihara.</span>
+            </p>
+            <div className="flex items-center gap-3 md:gap-5">
+              <Link
+                href="/privacy"
+                className="text-[12px] font-medium text-white/50 hover:text-white md:text-[13px]"
+              >
+                Dasar Privasi
+              </Link>
+              <span aria-hidden="true" className="text-[12px] text-white/40 md:hidden">
+                ·
+              </span>
+              <Link
+                href="/terms"
+                className="text-[12px] font-medium text-white/50 hover:text-white md:text-[13px]"
+              >
+                <span className="md:hidden">Terma Perkhidmatan</span>
+                <span className="hidden md:inline">Terma</span>
+              </Link>
             </div>
           </div>
-        </div>
-        <div className="max-w-6xl mx-auto px-5 md:px-10 pt-8 border-t border-white/20 text-center text-sm text-white/70">
-          © 2026 Klinik Citra. Hak cipta terpelihara.
         </div>
       </footer>
+
+      {/* Mobile sticky CTA + spacer */}
+      <div className="h-[76px] md:hidden" aria-hidden="true" />
+      <StickyCta />
     </>
   );
 }

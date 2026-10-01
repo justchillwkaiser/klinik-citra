@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Manrope, Playfair_Display, IBM_Plex_Mono } from "next/font/google";
+import { Manrope, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  style: ["normal", "italic"],
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -24,7 +18,7 @@ const plexMono = IBM_Plex_Mono({
 
 const SITE_URL = "https://klinik-citra.vercel.app";
 const OG_IMAGE =
-  "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1200&h=630&fit=crop&q=80";
+  "https://images.unsplash.com/photo-1745970347652-8f22f5d7d3ba?w=1200&h=630&fit=crop&q=80";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -33,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s | KLINIK CITRA",
   },
   description:
-    "Klinik pergigian keluarga di Ipoh, Perak. Pembersihan gigi, cabutan, tampalan, whitening, braces. Buat temujanji online.",
+    "Klinik pergigian keluarga di Ipoh, Perak. Pemeriksaan, scaling, pemutihan, implan dan braces dengan harga yang jelas. Tempah temujanji dalam talian.",
   alternates: {
     canonical: "/",
   },
@@ -44,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "Klinik Citra",
     title: "KLINIK CITRA - Klinik Pergigian Keluarga di Ipoh",
     description:
-      "Rawatan pergigian mesra keluarga dengan teknologi moden, harga telus, dan temujanji yang dihormati.",
+      "Rawatan gigi yang tenang, jelas dan mesra keluarga. Kami terangkan setiap langkah dan setiap harga sebelum rawatan mula.",
     images: [
       {
         url: OG_IMAGE,
@@ -58,8 +52,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ms" className={`${manrope.variable} ${playfair.variable} ${plexMono.variable}`}>
-      <body className="bg-cream text-espresso min-h-dvh">{children}</body>
+    <html lang="ms" className={`${manrope.variable} ${plexMono.variable}`}>
+      <body className="min-h-dvh">{children}</body>
     </html>
   );
 }

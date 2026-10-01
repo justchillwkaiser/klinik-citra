@@ -1,0 +1,139 @@
+{
+  "engagement": "2026-10-01-klinik-citra-supply-chain",
+  "generated": "2026-10-01",
+  "findings": [
+    {
+      "id": "SEC-001",
+      "title": "next 16.3.1 — three unauthenticated RCE advisories (Windows dev server, Image Optimization API/AVIF, next/og ImageResponse)",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "CRITICAL",
+      "exploitability": "unauthenticated",
+      "confidence": "executed",
+      "entry_point": "HTTP (self-hosted next start / _next/image / og image routes)",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" },
+        { "kind": "command", "ref": "03-evidence/npm-ls-resolved.txt" }
+      ],
+      "advisories": [
+        "GHSA-p293-qw3h-jr36",
+        "GHSA-2xp9-vwfh-vxw4",
+        "GHSA-vcvr-r3jv-pc5j"
+      ],
+      "impact": "Unauthenticated remote code execution on affected deployments (image optimization endpoint and og image generation are network-reachable; Windows-hosted dev/start servers directly exploitable).",
+      "remediation": "npm install next@16.3.8 eslint-config-next@16.3.8 (patch within major 16, non-semver-major per npm audit).",
+      "status": "fixed",
+      "accepted_by": null
+    },
+    {
+      "id": "SEC-002",
+      "title": "deepmerge-ts <8.0.0 — stack exhaustion when merging recursive object graphs (via prisma / @prisma/config)",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "HIGH",
+      "exploitability": "local",
+      "confidence": "executed",
+      "entry_point": "prisma CLI / prisma.config.ts loading (install + build lifecycle)",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" },
+        { "kind": "command", "ref": "03-evidence/npm-ls-resolved.txt" }
+      ],
+      "advisories": ["GHSA-ggr8-5vv4-36mx"],
+      "impact": "Process crash/DoS of the Prisma CLI when merging attacker-influenced recursive config graphs. Build-time surface, not on the HTTP runtime path of this app.",
+      "remediation": "package.json overrides: deepmerge-ts ^8.0.2 (avoided npm-audit --force downgrade of prisma 7 -> 6 which would break the schema/config setup).",
+      "status": "fixed",
+      "accepted_by": null
+    },
+    {
+      "id": "SEC-003",
+      "title": "mysql2 <=3.23.0 — auth plugin downgrade leaks plaintext credentials + zlib decompression bomb DoS (via prisma)",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "HIGH",
+      "exploitability": "local",
+      "confidence": "executed",
+      "entry_point": "prisma engines/CLI (MySQL path). NOTE: this app uses @prisma/adapter-pg (PostgreSQL); mysql2 is transitive and not imported by application code",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" },
+        { "kind": "command", "ref": "03-evidence/npm-ls-resolved.txt" }
+      ],
+      "advisories": ["GHSA-3f6p-5ww8-9rcr", "GHSA-rgwj-5xj2-c3m3"],
+      "impact": "Credential leak on downgrade attack and memory DoS on compressed MySQL protocol traffic — reachable only where a MySQL connection is made (not this app's runtime path).",
+      "remediation": "package.json overrides: mysql2 ^3.24.5.",
+      "status": "fixed",
+      "accepted_by": null
+    },
+    {
+      "id": "SEC-004",
+      "title": "brace-expansion — quadratic-time expansion + uncontrolled recursion DoS (transitive)",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "HIGH",
+      "exploitability": "local",
+      "confidence": "executed",
+      "entry_point": "glob/minimatch toolchain (build/lint tooling)",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" }
+      ],
+      "advisories": ["GHSA-q2hr-2g5m-vwhr", "GHSA-qhr7-859c-m2p7", "GHSA-6j4f-fj2g-mc7p"],
+      "impact": "Stack exhaustion / CPU DoS on crafted brace patterns; tooling surface.",
+      "remediation": "npm audit fix (lockfile bump).",
+      "status": "fixed",
+      "accepted_by": null
+    },
+    {
+      "id": "SEC-005",
+      "title": "fast-uri 3.0.0-3.1.7 — host confusion / SSRF family via malformed URI normalization (transitive)",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "HIGH",
+      "exploitability": "local",
+      "confidence": "executed",
+      "entry_point": "ajv/URI reference validation toolchain",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" }
+      ],
+      "advisories": [
+        "GHSA-5jgf-p345-68v8",
+        "GHSA-f65p-4m7j-42xc",
+        "GHSA-fph4-wmhf-6fwf",
+        "GHSA-jqff-g426-hqxp",
+        "GHSA-qw65-cvwx-89v3",
+        "GHSA-hrr3-gc8f-f4qj"
+      ],
+      "impact": "Incorrect URI canonicalization can produce host confusion / SSRF in consumers of fast-uri.",
+      "remediation": "npm audit fix (lockfile bump).",
+      "status": "fixed",
+      "accepted_by": null
+    },
+    {
+      "id": "SEC-006",
+      "title": "js-yaml 4.0.0-4.3.1 — maxTotalMergeKeys does not limit CPU use for empty merge sources (transitive)",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "HIGH",
+      "exploitability": "local",
+      "confidence": "executed",
+      "entry_point": "YAML parsing in build/lint tooling",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" }
+      ],
+      "advisories": ["GHSA-2883-xcg3-v3hh"],
+      "impact": "CPU exhaustion on crafted YAML merge sources; tooling surface.",
+      "remediation": "npm audit fix (lockfile bump).",
+      "status": "fixed",
+      "accepted_by": null
+    },
+    {
+      "id": "SEC-007",
+      "title": "sharp <0.35.4 — libheif vulnerabilities (double free / memory safety) in image decode path",
+      "class": "supply-chain-vulnerable-dep",
+      "severity": "HIGH",
+      "exploitability": "unauthenticated",
+      "confidence": "executed",
+      "entry_point": "next image optimization (sharp used server-side to process uploaded/remote images)",
+      "evidence": [
+        { "kind": "command", "ref": "03-evidence/npm-audit-before.json" }
+      ],
+      "advisories": ["GHSA-rgj7-g3m4-5g8c", "GHSA-g89c-p67h-r497", "GHSA-2jg2-4ch7-h545"],
+      "impact": "Memory corruption / DoS when image optimization decodes a crafted HEIF-family image via the network-reachable image endpoint (self-hosted).",
+      "remediation": "npm audit fix (bumped sharp to >=0.35.4).",
+      "status": "fixed",
+      "accepted_by": null
+    }
+  ]
+}

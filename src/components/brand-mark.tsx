@@ -1,23 +1,25 @@
-import { Tooth } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+
+/* Brand — klinikcitra.pen "Brand": logo mark + wordmark */
 
 export function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5">
-      <div
-        className="grid place-items-center rounded-xl bg-accent text-accent-ink"
-        style={{ width: compact ? 32 : 38, height: compact ? 32 : 38 }}
+    <Link href="/" className="flex items-center gap-2.5 xl:gap-3">
+      <span
+        className={`grid place-items-center rounded-[10px] bg-primary font-extrabold text-on-primary xl:rounded-[11px] ${
+          compact ? "h-8 w-8 text-[15px]" : "h-[34px] w-[34px] text-[17px] xl:h-[38px] xl:w-[38px] xl:text-[19px]"
+        }`}
+        aria-hidden="true"
       >
-        <Tooth size={compact ? 16 : 20} weight="fill" />
-      </div>
-      <div>
-        <div className="text-[15px] font-extrabold tracking-wide leading-none" style={compact ? { fontSize: 14 } : undefined}>
-          KLINIK CITRA
-        </div>
-        <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.14em] text-taupe-faint">
-          Pergigian Keluarga
-        </div>
-      </div>
+        C
+      </span>
+      <span
+        className={`font-extrabold tracking-[-0.4px] text-text ${
+          compact ? "text-[15px]" : "text-[18px] xl:text-[20px]"
+        }`}
+      >
+        Klinik Citra
+      </span>
     </Link>
   );
 }

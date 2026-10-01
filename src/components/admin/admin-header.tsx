@@ -19,7 +19,7 @@ export function AdminHeader() {
       <BrandMark compact />
       <button
         onClick={logout}
-        className="ml-auto inline-flex items-center gap-2 rounded-[10px] border border-line bg-surface px-3.5 py-2 text-[13px] font-semibold text-taupe hover:bg-surface-2 hover:text-espresso"
+        className="ml-auto inline-flex items-center gap-2 rounded-[10px] border border-border bg-surface px-3.5 py-2 text-[13px] font-semibold text-text-muted hover:bg-surface-soft hover:text-text"
       >
         <SignOut size={16} />
         Log keluar

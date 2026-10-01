@@ -1,93 +1,131 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { List, X, WhatsappLogo } from "@phosphor-icons/react";
+import { List, X, Phone, MessageCircle } from "lucide-react";
+import { BrandMark } from "@/components/brand-mark";
+import { ButtonPrimary, ExternalButton } from "@/components/button";
 
 const NAV_LINKS = [
   { href: "#rawatan", label: "Rawatan" },
-  { href: "#kenapa", label: "Kenapa Kami" },
   { href: "#doktor", label: "Doktor" },
-  { href: "#testimoni", label: "Testimoni" },
+  { href: "#harga", label: "Harga" },
+  { href: "#tentang", label: "Tentang", desktopOnly: true },
   { href: "#lokasi", label: "Lokasi" },
 ];
+
+const WHATSAPP_URL = "https://wa.me/60125186720";
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav
-      aria-label="Navigasi utama"
-      className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-line"
-    >
-      <div className="flex items-center justify-between px-5 md:px-10 h-16">
-        <Link href="/" className="text-lg font-bold text-espresso py-2">
-          Klinik Citra
-        </Link>
-
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-sm text-taupe hover:text-accent transition-colors py-2"
-            >
-              {l.label}
+    <header className="relative z-50">
+      {/* 01 Topbar */}
+      <div className="block bg-primary md:hidden xl:block">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-[9px] md:px-10 md:py-[11px] xl:px-[120px]">
+          <p className="text-[11px] font-medium text-white/80 md:text-[13px]">
+            <span className="md:hidden">Isnin–Jumaat 9:00–21:00</span>
+            <span className="hidden md:inline">
+              Klinik pergigian keluarga · Ipoh, Perak
+            </span>
+          </p>
+          <div className="flex items-center gap-4">
+            <span className="hidden text-[13px] font-medium text-white/80 md:inline">
+              Isnin–Jumaat  9:00–21:00
+            </span>
+            <span aria-hidden="true" className="hidden h-1 w-1 rounded-full bg-white/40 md:block" />
+            <a href="tel:+6052558899" className="text-[11px] font-bold text-on-primary md:text-[13px]">
+              +60 5-255 8899
             </a>
-          ))}
-          <Link
-            href="/booking"
-            className="inline-flex items-center px-5 py-2.5 bg-accent text-white text-sm font-semibold rounded-lg hover:bg-accent-dark transition-colors"
-          >
-            Buat Temujanji
-          </Link>
-        </div>
-
-        {/* Mobile: booking CTA + hamburger */}
-        <div className="flex md:hidden items-center gap-2">
-          <Link
-            href="/booking"
-            className="inline-flex items-center px-4 py-2.5 min-h-[44px] bg-accent text-white text-sm font-semibold rounded-lg"
-          >
-            Tempah
-          </Link>
-          <button
-            type="button"
-            onClick={() => setOpen(!open)}
-            aria-expanded={open}
-            aria-label={open ? "Tutup menu" : "Buka menu"}
-            className="grid place-items-center w-11 h-11 rounded-lg border border-line text-espresso"
-          >
-            {open ? <X size={20} /> : <List size={20} />}
-          </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden border-t border-line bg-surface px-5 py-3">
-          {NAV_LINKS.map((l) => (
+      {/* 02 Nav */}
+      <nav
+        aria-label="Navigasi utama"
+        className="border-b border-border bg-bg"
+      >
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-[14px] md:px-10 md:py-4 xl:px-[120px] xl:py-[18px]">
+          <BrandMark />
+
+          <div className="hidden items-center gap-[26px] md:flex xl:gap-[30px]">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className={`py-1.5 text-[14px] font-semibold text-text transition-colors hover:text-primary xl:text-[15px] ${
+                  l.desktopOnly ? "hidden xl:inline" : ""
+                }`}
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+
+          {/* Tablet + desktop right side */}
+          <div className="hidden items-center gap-3.5 md:flex xl:gap-4">
             <a
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="flex items-center min-h-[44px] py-2 text-[15px] font-semibold text-espresso border-b border-line last:border-0"
+              href="tel:+6052558899"
+              className="flex items-center gap-2 text-[14px] font-bold text-primary xl:text-[15px]"
             >
-              {l.label}
+              <Phone size={16} aria-hidden="true" />
+              05-255 8899
             </a>
-          ))}
-          <a
-            href="https://wa.me/60123456789"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 mb-1 inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 border border-line rounded-lg text-sm font-semibold text-espresso"
-          >
-            <WhatsappLogo size={18} weight="fill" className="text-accent" />
-            WhatsApp Klinik
-          </a>
+            <ButtonPrimary href="/booking" className="px-5 py-3 text-[14px] xl:px-6 xl:py-[15px] xl:text-[16px]">
+              <span className="hidden xl:inline">Tempah temujanji</span>
+              <span className="xl:hidden">Tempah</span>
+            </ButtonPrimary>
+          </div>
+
+          {/* Mobile right side */}
+          <div className="flex items-center gap-2 md:hidden">
+            <a
+              href="tel:+6052558899"
+              aria-label="Panggil Klinik Citra"
+              className="grid h-[38px] w-[38px] place-items-center rounded-md border border-border bg-surface text-primary"
+            >
+              <Phone size={18} aria-hidden="true" />
+            </a>
+            <button
+              type="button"
+              onClick={() => setOpen(!open)}
+              aria-expanded={open}
+              aria-label={open ? "Tutup menu" : "Buka menu"}
+              className="grid h-[38px] w-[38px] place-items-center rounded-md bg-primary text-on-primary"
+            >
+              {open ? <X size={18} /> : <List size={18} />}
+            </button>
+          </div>
         </div>
-      )}
-    </nav>
+
+        {/* Mobile menu */}
+        {open && (
+          <div className="border-b border-border bg-surface-soft px-5 py-4 md:hidden">
+            <div className="flex flex-col">
+              {NAV_LINKS.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="flex min-h-[44px] items-center border-b border-border py-2 text-[16px] font-semibold text-text last:border-0"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </div>
+            <ExternalButton
+              href={WHATSAPP_URL}
+              variant="secondary"
+              fullWidth
+              className="mt-3"
+              icon={<MessageCircle size={18} className="text-primary" aria-hidden="true" />}
+            >
+              WhatsApp kami
+            </ExternalButton>
+          </div>
+        )}
+      </nav>
+    </header>
   );
 }

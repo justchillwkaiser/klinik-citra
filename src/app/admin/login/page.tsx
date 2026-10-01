@@ -33,12 +33,12 @@ export default function AdminLoginPage() {
 
   return (
     <main className="grid min-h-dvh place-items-center p-6">
-      <div className="w-full max-w-[400px] rounded-[20px] border border-line bg-surface p-8 shadow-soft">
+      <div className="w-full max-w-[400px] rounded-[20px] border border-border bg-surface p-8 shadow-soft">
         <div className="mb-6">
           <BrandMark />
         </div>
         <h1 className="text-[22px] font-extrabold">Log masuk admin</h1>
-        <p className="mb-5 mt-1 text-[13.5px] text-taupe">Urus temujanji pesakit.</p>
+        <p className="mb-5 mt-1 text-[13.5px] text-text-muted">Urus temujanji pesakit.</p>
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="field">
