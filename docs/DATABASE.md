@@ -115,6 +115,8 @@ Transisi (MVP): BARU → KONFIRMASI → SELESAI; mana-mana → BATAL. Validation
 
 ## 5. Seed
 
-- 1 admin: `admin@klinikcitra.my` / `Demo123!` (hash via better-auth/crypto, Account credential)
+- 1 admin: emel dari `ADMIN_EMAIL` (lalai `admin@klinikcitra.my`), kata laluan dari `ADMIN_PASSWORD`
+  (minimum 12 aksara). Jika `ADMIN_PASSWORD` kosong, seed menjana kata laluan rawak dan memaparkannya
+  sekali dalam output. **Tiada kata laluan dalam kod.** (hash via better-auth/crypto, Account credential)
 - 4-6 contoh appointment (status campuran) supaya admin page nampak hidup
 - Idempotent: deleteMany ikut urutan FK (Appointment → Account → Session → User → Verification)

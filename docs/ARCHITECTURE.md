@@ -61,7 +61,7 @@ prisma/
 - Better Auth email/password, `additionalFields.role` default `ADMIN`.
 - `proxy.ts`: route protected = `/admin/*`; redirect ke `/booking` atau `/` bila tiada session? (Keputusan: admin pages protected; landing/booking public.)
 - Guard dua lapis: proxy + semakan server-side dalam admin layout (`requireRole(['ADMIN'])`).
-- Demo admin: `admin@klinikcitra.my` / `Demo123!` (seed).
+- Admin seed: emel `ADMIN_EMAIL`, kata laluan `ADMIN_PASSWORD` (env; jika kosong seed menjana kata laluan rawak dan memaparkannya sekali). Tiada kata laluan dalam kod.
 
 ## 5. Booking Flow (public)
 

@@ -91,4 +91,4 @@ Appointment:
 1. **DB:** Guna db `neondb` sedia ada (model Appointment tak conflict dengan Kopi Senja) ATAU create db baru `klinikcitra` dalam Neon project sama? *(Cadangan Sarae: db baru - bersih, senang migrate/rollback)*
 2. **Nama:** KLINIK CITRA kekal? *(Cadangan: kekal - konsisten dengan konsep asal)*
 3. **Slot masa:** Tetap 09:00-17:00 hourly (7 slot/hari)? *(Cadangan: ya, simple untuk MVP)*
-4. **Admin credentials:** Demo admin `admin@klinikcitra.my` / password demo?
+4. **Admin credentials:** Selesai — emel dari `ADMIN_EMAIL`, kata laluan dari `ADMIN_PASSWORD` (env; minimum 12 aksara). Jika `ADMIN_PASSWORD` kosong, seed menjana kata laluan rawak dan memaparkannya sekali. Tiada kata laluan dalam kod.

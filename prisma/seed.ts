@@ -1,6 +1,7 @@
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hashPassword } from "better-auth/crypto";
+import { resolveAdminCredentials } from "../src/lib/seed-admin";
 
 const connectionString = process.env.DATABASE_URL!;
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
@@ -21,15 +22,20 @@ async function main() {
   await db.user.deleteMany();
   await db.verification.deleteMany();
 
-  // Admin
-  const hash = await hashPassword("Demo123!");
+  // Admin — kredensial dari env (ADMIN_EMAIL / ADMIN_PASSWORD), tiada kata laluan dalam kod
+  const { email, password, passwordSource } = resolveAdminCredentials();
+  const hash = await hashPassword(password);
   const admin = await db.user.create({
-    data: { name: "Admin Klinik Citra", email: "admin@klinikcitra.my", role: "ADMIN" },
+    data: { name: "Admin Klinik Citra", email, role: "ADMIN" },
   });
   await db.account.create({
     data: { userId: admin.id, accountId: admin.id, providerId: "credential", password: hash },
   });
-  console.log("user: admin@klinikcitra.my (ADMIN)");
+  console.log(`user: ${email} (ADMIN)`);
+  if (passwordSource === "generated") {
+    console.log(`kata laluan dijana (dipaparkan sekali, tidak disimpan): ${password}`);
+    console.log("Tip: set ADMIN_EMAIL + ADMIN_PASSWORD dalam .env untuk menetapkan sendiri.");
+  }
 
   const samples = [
     { name: "Nurul Izzah", phone: "012-345 6789", service: "Pembersihan Gigi", offset: 1, time: "10:00", status: "BARU" },
